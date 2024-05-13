@@ -1,0 +1,9 @@
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\bin\Release\ServoTester2.exe.config
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\bin\Release\ServoTester2.exe
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\bin\Release\ServoTester2.pdb
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\obj\Release\ServoTester2.FormMain.resources
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\obj\Release\ServoTester2.Properties.Resources.resources
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\obj\Release\ServoTester2.csproj.GenerateResource.cache
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\obj\Release\ServoTester2.csproj.CoreCompileInputs.cache
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\obj\Release\ServoTester2.exe
+D:\Develop\Eloiz\PC Software\ServoTester2\ServoTester2\obj\Release\ServoTester2.pdb
