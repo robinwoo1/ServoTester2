@@ -89,8 +89,10 @@ namespace ServoTester2
             this.tbNone = new System.Windows.Forms.RadioButton();
             this.workTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.btCalibStop = new System.Windows.Forms.Button();
             this.btCalibStart = new System.Windows.Forms.Button();
+            this.btCalibStop = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.tbAckMessage = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -134,6 +136,7 @@ namespace ServoTester2
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -851,34 +854,53 @@ namespace ServoTester2
             this.groupBox5.Controls.Add(this.btCalibStop);
             this.groupBox5.Location = new System.Drawing.Point(12, 499);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(560, 44);
+            this.groupBox5.Size = new System.Drawing.Size(239, 44);
             this.groupBox5.TabIndex = 50;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Calibration Command";
             // 
-            // btCalibStop
-            // 
-            this.btCalibStop.Location = new System.Drawing.Point(174, 15);
-            this.btCalibStop.Name = "btCalibStop";
-            this.btCalibStop.Size = new System.Drawing.Size(94, 23);
-            this.btCalibStop.TabIndex = 6;
-            this.btCalibStop.Text = "STOP";
-            this.btCalibStop.UseVisualStyleBackColor = true;
-            // 
             // btCalibStart
             // 
-            this.btCalibStart.Location = new System.Drawing.Point(43, 15);
+            this.btCalibStart.Location = new System.Drawing.Point(17, 15);
             this.btCalibStart.Name = "btCalibStart";
             this.btCalibStart.Size = new System.Drawing.Size(94, 23);
             this.btCalibStart.TabIndex = 7;
             this.btCalibStart.Text = "START";
             this.btCalibStart.UseVisualStyleBackColor = true;
             // 
+            // btCalibStop
+            // 
+            this.btCalibStop.Location = new System.Drawing.Point(127, 15);
+            this.btCalibStop.Name = "btCalibStop";
+            this.btCalibStop.Size = new System.Drawing.Size(94, 23);
+            this.btCalibStop.TabIndex = 6;
+            this.btCalibStop.Text = "STOP";
+            this.btCalibStop.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.tbAckMessage);
+            this.groupBox6.Location = new System.Drawing.Point(333, 500);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(239, 44);
+            this.groupBox6.TabIndex = 51;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Ack message";
+            // 
+            // tbAckMessage
+            // 
+            this.tbAckMessage.Enabled = false;
+            this.tbAckMessage.Location = new System.Drawing.Point(15, 14);
+            this.tbAckMessage.Name = "tbAckMessage";
+            this.tbAckMessage.Size = new System.Drawing.Size(100, 21);
+            this.tbAckMessage.TabIndex = 0;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(groupBox4);
             this.Controls.Add(groupBox3);
@@ -912,6 +934,8 @@ namespace ServoTester2
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -955,6 +979,8 @@ namespace ServoTester2
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button btCalibStart;
         private System.Windows.Forms.Button btCalibStop;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox tbAckMessage;
     }
 }
 

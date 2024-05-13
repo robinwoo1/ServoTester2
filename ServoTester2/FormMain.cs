@@ -28,6 +28,8 @@ namespace ServoTester2
         // private int MotorState;
         private int CalibStepState;// { CALIB_SUCCESS, CALIB_FAIL, CALIB_USERSTOP }
         private int CalibResultState;// { get; set; }
+        private int time_tick;
+        public List<byte> SendByte {get; set;} = new List<byte>();
 
         private void FormMain_Load(object sender, EventArgs e)
         {
@@ -237,6 +239,9 @@ namespace ServoTester2
 
         private void workTimer_Tick(object sender, EventArgs e)
         {
+          
+            time_tick++;
+            tbAckMessage.Text = time_tick.ToString();
             // check motor state
             switch (MotorState)
             {
