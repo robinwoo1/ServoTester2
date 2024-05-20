@@ -77,6 +77,18 @@ namespace ServoTester2
             Port.Write(SendDataPacket, 0, PtrCnt);
           }
         }
+        else if (Command == 7)
+        {
+          // if (StartAddress == 1)
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            Port.Write(SendDataPacket, 0, PtrCnt);
+          }
+        }
       }
     private void MakePacket(byte Command, ushort StartAddress, short Data)
     {
@@ -106,6 +118,14 @@ namespace ServoTester2
         }
       }
       else if (Command == 6) // parameter
+      {
+        // if (StartAddress == 1)
+        {
+          SendDataPacket[u16PtrCnt++] = (byte)(Data >> 0);
+          SendDataPacket[u16PtrCnt++] = (byte)(Data >> 8);
+        }
+      }
+      else if (Command == 7) // parameter
       {
         // if (StartAddress == 1)
         {
@@ -221,7 +241,7 @@ namespace ServoTester2
 
     private void btMotor_Click(object sender, EventArgs e)
     {
-      var list = new List<byte>();
+      // var list = new List<byte>();
       // check sender
       if (sender == btRun)
       {
@@ -232,12 +252,23 @@ namespace ServoTester2
         MakeAndSendData(6, 1, 0);
       }
 
-      // check port is open
-      if (Port.IsOpen && list.Count > 0)
-        // write packet
-        Port.Write(list.ToArray(), 0, list.Count);
+      // // check port is open
+      // if (Port.IsOpen && list.Count > 0)
+      //   // write packet
+      //   Port.Write(list.ToArray(), 0, list.Count);
     }
 
+    private void btCalibrationCommand_Click(object sender, EventArgs e)
+    {
+      if (sender == btCalibStart)
+      {
+        MakeAndSendData(7, 1, 1);
+      }
+      else
+      {
+        MakeAndSendData(7, 1, 0);
+      }
+    }
     private void tbSet_ValueChanged(object sender, EventArgs e)
     {
       Control control = null;
@@ -381,7 +412,7 @@ namespace ServoTester2
       switch (CalibResultState)
       {
         // success
-        case 0 when !tbCalibSuccess.Checked:
+        case 2 when !tbCalibSuccess.Checked:
           tbCalibSuccess.Checked = true;
           break;
         // fail
@@ -389,7 +420,7 @@ namespace ServoTester2
           tbCalibFail.Checked = true;
           break;
         // user stop
-        case 2 when !tbCalibUserStop.Checked:
+        case 0 when !tbCalibUserStop.Checked:
           tbCalibUserStop.Checked = true;
           break;
       }
@@ -458,19 +489,43 @@ namespace ServoTester2
         // get command
         // var cmd = Analyze[1];
         var cmd = Analyze[4];
+        var address = (Analyze[9] << 8) | Analyze[8];
         // check command
         switch (cmd)
         {
           case 0x04:
             // get value
-            var address = (Analyze[9] << 8) | Analyze[8];
             // MotorState = ((Analyze[3] << 8) | Analyze[4]) != 0;
-            if (address == 1)
+            if (address == 2)
+            {
               MotorState = ((Analyze[11] << 8) | Analyze[10]) != 0;
-            CalibStepState = ((Analyze[11] << 8) | Analyze[10]);
-            CalibResultState = ((Analyze[11] << 8) | Analyze[10]);
+              // CalibStepState = ((Analyze[11] << 8) | Analyze[10]);
+              // CalibResultState = ((Analyze[11] << 8) | Analyze[10]);
+            }
             break;
           case 0x06:
+            break;
+          case 7:
+            if (address == 2)
+            {
+              int CalibStepState1 = ((Analyze[11] << 8) | Analyze[10]);
+              if (CalibStepState1 == 0)
+                CalibStepState = 0;
+              else if (CalibStepState1 == 1)
+                CalibStepState = 1;
+              else if (CalibStepState1 == 2 || CalibStepState1 == 3)
+                CalibStepState = 2;
+              else if (CalibStepState1 == 4 || CalibStepState1 == 5)
+                CalibStepState = 3;
+              else
+                CalibStepState = 4;
+            }
+            else if (address == 3)
+            {
+              CalibResultState = ((Analyze[11] << 11) | Analyze[10]);
+            }
+            break;
+          default:
             break;
         }
         // clear analyze buffer

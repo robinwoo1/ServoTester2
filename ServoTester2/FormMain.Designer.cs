@@ -861,21 +861,23 @@ namespace ServoTester2
             // 
             // btCalibStart
             // 
-            this.btCalibStart.Location = new System.Drawing.Point(17, 15);
+            this.btCalibStart.Location = new System.Drawing.Point(127, 15);
             this.btCalibStart.Name = "btCalibStart";
             this.btCalibStart.Size = new System.Drawing.Size(94, 23);
             this.btCalibStart.TabIndex = 7;
             this.btCalibStart.Text = "START";
             this.btCalibStart.UseVisualStyleBackColor = true;
+            this.btCalibStart.Click += new System.EventHandler(this.btCalibrationCommand_Click);
             // 
             // btCalibStop
             // 
-            this.btCalibStop.Location = new System.Drawing.Point(127, 15);
+            this.btCalibStop.Location = new System.Drawing.Point(17, 15);
             this.btCalibStop.Name = "btCalibStop";
             this.btCalibStop.Size = new System.Drawing.Size(94, 23);
             this.btCalibStop.TabIndex = 6;
             this.btCalibStop.Text = "STOP";
             this.btCalibStop.UseVisualStyleBackColor = true;
+            this.btCalibStop.Click += new System.EventHandler(this.btCalibrationCommand_Click);
             // 
             // groupBox6
             // 
