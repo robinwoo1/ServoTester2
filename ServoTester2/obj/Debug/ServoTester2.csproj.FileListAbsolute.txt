@@ -1,10 +1,10 @@
-D:\hantas-soft\ServoTester2\ServoTester2\bin\Debug\ServoTester2.exe.config
-D:\hantas-soft\ServoTester2\ServoTester2\bin\Debug\ServoTester2.exe
-D:\hantas-soft\ServoTester2\ServoTester2\bin\Debug\ServoTester2.pdb
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.csproj.AssemblyReference.cache
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.FormMain.resources
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.Properties.Resources.resources
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.csproj.GenerateResource.cache
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.csproj.CoreCompileInputs.cache
+D:\hantas-soft\ServoTester2\ServoTester2\bin\Debug\ServoTester2.exe.config
+D:\hantas-soft\ServoTester2\ServoTester2\bin\Debug\ServoTester2.exe
+D:\hantas-soft\ServoTester2\ServoTester2\bin\Debug\ServoTester2.pdb
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.exe
 D:\hantas-soft\ServoTester2\ServoTester2\obj\Debug\ServoTester2.pdb

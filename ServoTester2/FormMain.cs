@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -13,6 +14,8 @@ namespace ServoTester2
   public partial class FormMain : Form
   {
       // private readonly byte[] _requestPacket = { 0x01, 0x04, 0x01, 0x00, 0x00, 0x01, 0x30, 0x36 };
+      public const ushort SERIAL_BUF_SIZE = 128;
+      public const ushort COMMAND_LIST_NUM = 1000;
       public const int _LengthLow = 2;
       public const int _LengthHigh = 3;
       private List<byte> _requestPacket;
@@ -27,13 +30,17 @@ namespace ServoTester2
       }
 
       private SerialPort Port { get; } = new SerialPort();
-      private List<byte> Receive { get; } = new List<byte>();
-      private List<byte> Analyze { get; } = new List<byte>();
+      // private List<byte> Receive { get; set;} = new List<byte>();
+      // private List<byte> Analyze { get; } = new List<byte>();
       private bool MotorState { get; set; }
       // private int MotorState;
       private int CalibStepState;// { CALIB_SUCCESS, CALIB_FAIL, CALIB_USERSTOP }
       private int CalibResultState;// { get; set; }
       private int time_tick;
+      public byte[] ComReadBuffer = new byte[128];
+      public int ComReadIndex = 0;
+      public ushort Command_Index_Pc;
+      public ushort[,] Command_List_Pc = new ushort[COMMAND_LIST_NUM, 3];
       public List<byte> SendByte {get; set;} = new List<byte>();
       public struct CmdAck_
       {
@@ -47,25 +54,79 @@ namespace ServoTester2
           this.StartAddress = StartAddress_;
         }
       }
+      public struct RecvBuf_
+      {
+        public ushort head;
+        public ushort tail;
+        public byte[] data;
+        public RecvBuf_(int num)
+        {
+          this.head = 0;
+          this.tail = 0;
+          this.data = new byte[num];
+        }
+      }
       CmdAck_ CmdAck = new CmdAck_( 0, 0, 0);
+      RecvBuf_ RecvBuf = new RecvBuf_(SERIAL_BUF_SIZE);
+      public int rbuf_put(byte[] rbuf, ushort rsize)
+      {
+        ushort nhead;
+        ushort datatocopy;
+        ushort curPos = RecvBuf.head; // Update the last position before copying new data
 
+        if (curPos + rsize > SERIAL_BUF_SIZE)
+        {
+          datatocopy = (ushort)(SERIAL_BUF_SIZE - curPos); // find out how much space is left in the main buffer
+          if(RecvBuf.tail > RecvBuf.head){
+            return 0;
+          }
+          else if((RecvBuf.tail < RecvBuf.head) && (RecvBuf.tail <= (rsize-datatocopy))){
+            return 0;
+          }
+          // memcpy((uint8_t *)rb->data+curPos, rbuf, datatocopy); // copy data in that remaining space
+          Array.Copy(rbuf, 0, RecvBuf.data, curPos, datatocopy); // copy data in that remaining space
+          curPos = 0; // point to the start of the buffer
+          // memcpy((uint8_t *)rb->data, (uint8_t *)rbuf+datatocopy, (rsize-datatocopy)); // copy the remaining data
+          Array.Copy(rbuf, datatocopy, RecvBuf.data, curPos, rsize-datatocopy); // copy the remaining data
+          RecvBuf.head = (ushort)(rsize-datatocopy); // update the position
+        }
+        else
+        {
+          nhead = (ushort)(RecvBuf.head + rsize);
+          if((RecvBuf.tail > RecvBuf.head) && (RecvBuf.tail <= nhead)){
+            return 0;
+          }
+          // rbuf.CopyTo(RecvBuf.data, curPos);
+          Array.Copy(rbuf, 0, RecvBuf.data, curPos, rbuf.Count());
+          RecvBuf.head = (ushort)((rsize+curPos) & (SERIAL_BUF_SIZE-1));
+        }
+        
+        return 1;
+      }
+      public byte rb_get(byte[] err)
+      {
+        byte d;
+        ushort ntail = (ushort)((RecvBuf.tail + 1) & (SERIAL_BUF_SIZE - 1));
+        if (RecvBuf.head == RecvBuf.tail)
+        {
+          err[0] = 1;
+          return 0;
+        }
+        d = RecvBuf.data[RecvBuf.tail];
+        RecvBuf.tail = ntail;
+        return d;
+      }
+
+      public void SendPacket(byte[] Packet, ushort Cnt)
+      {
+        if (Port.IsOpen && Cnt > 0)
+          Port.Write(Packet, 0, Cnt);
+      }
       public void MakeAndSendData(byte Command, ushort StartAddress, short Data)
       {
         ushort PtrCnt = 0;
         ushort calc_crc = 0;
-        if (Command == 4)
-        {
-          if (StartAddress == 1)
-          {
-            MakePacket(Command, StartAddress, Data);
-            PtrCnt = CmdAck.PtrCnt;
-            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
-            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
-            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
-            Port.Write(SendDataPacket, 0, PtrCnt);
-          }
-        }
-        else if (Command == 6)
+        if (Command == 104)
         {
           // if (StartAddress == 1)
           {
@@ -74,7 +135,21 @@ namespace ServoTester2
             calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
-            Port.Write(SendDataPacket, 0, PtrCnt);
+            // Port.Write(SendDataPacket, 0, PtrCnt);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+        }
+        else if (Command == 106)
+        {
+          // if (StartAddress == 1)
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            // Port.Write(SendDataPacket, 0, PtrCnt);
+            SendPacket(SendDataPacket, PtrCnt);
           }
         }
         else if (Command == 7)
@@ -86,7 +161,8 @@ namespace ServoTester2
             calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
-            Port.Write(SendDataPacket, 0, PtrCnt);
+            // Port.Write(SendDataPacket, 0, PtrCnt);
+            SendPacket(SendDataPacket, PtrCnt);
           }
         }
       }
@@ -109,15 +185,15 @@ namespace ServoTester2
       SendDataPacket[u16PtrCnt++] = (byte)(StartAddress >> 0); // Start Address low    8
       SendDataPacket[u16PtrCnt++] = (byte)(StartAddress >> 8); // Start Address high   9
 
-      if (Command == 4) // parameter
+      if (Command == 104) // parameter
       {
-        if (StartAddress == 1)
+        // if (StartAddress == 1)
         {
           SendDataPacket[u16PtrCnt++] = (byte)(Data >> 0);
           SendDataPacket[u16PtrCnt++] = (byte)(Data >> 8);
         }
       }
-      else if (Command == 6) // parameter
+      else if (Command == 106) // parameter
       {
         // if (StartAddress == 1)
         {
@@ -172,7 +248,8 @@ namespace ServoTester2
       tbBaudrate.SelectedIndex = 0;
 
       // set event
-      Port.DataReceived += PortOnDataReceived;
+      // Port.DataReceived += PortOnDataReceived;
+      Port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
     }
 
     private void btRefresh_Click(object sender, EventArgs e)
@@ -245,11 +322,11 @@ namespace ServoTester2
       // check sender
       if (sender == btRun)
       {
-        MakeAndSendData(6, 1, 1);
+        MakeAndSendData(106, 1, 1);
       }
       else
       {
-        MakeAndSendData(6, 1, 0);
+        MakeAndSendData(106, 1, 0);
       }
 
       // // check port is open
@@ -257,16 +334,43 @@ namespace ServoTester2
       //   // write packet
       //   Port.Write(list.ToArray(), 0, list.Count);
     }
+    private void btTqOffset_Click(object sender, EventArgs e)
+    {
+      // switch(sender)
+      // {
+      //   case btTqOffsetStart:
+      //     MakeAndSendData(7, 13, 1);
+      //     break;
+      //   case btTqOffsetStop:
+      //     MakeAndSendData(7, 13, 0);
+      //     break;
+      //   case btTqOffsetSet:
+      //     MakeAndSendData(7, 9, 0);
+      //     break;
+      // }
+      if (sender == btTqOffsetStart)
+      {
+        MakeAndSendData(7, 13, 1);
+      }
+      else if (sender == btTqOffsetStop)
+      {
+        MakeAndSendData(7, 13, 0);
+      }
+      else if (sender == btTqOffsetSet)
+      {
+        MakeAndSendData(7, 9, 0);
+      }
+    }
 
     private void btCalibrationCommand_Click(object sender, EventArgs e)
     {
       if (sender == btCalibStart)
       {
-        MakeAndSendData(7, 1, 1);
+        MakeAndSendData(7, 11, 1);
       }
       else
       {
-        MakeAndSendData(7, 1, 0);
+        MakeAndSendData(7, 11, 0);
       }
     }
     private void tbSet_ValueChanged(object sender, EventArgs e)
@@ -293,7 +397,7 @@ namespace ServoTester2
         case 5:
           // add range
           // packet.AddRange(GetPacket(addr, Convert.ToInt32(((ComboBox)control).SelectedIndex)));
-          MakeAndSendData(6, addr, Convert.ToInt16(((ComboBox)control).SelectedIndex));
+          MakeAndSendData(106, addr, Convert.ToInt16(((ComboBox)control).SelectedIndex));
           break;
         case 3:
         case 4:
@@ -311,7 +415,7 @@ namespace ServoTester2
         case 17:
           // add range
           // packet.AddRange(GetPacket(addr, Convert.ToInt32(((NumericUpDown)control).Value)));
-          MakeAndSendData(6, addr, Convert.ToInt16(((NumericUpDown)control).Value));
+          MakeAndSendData(106, addr, Convert.ToInt16(((NumericUpDown)control).Value));
           break;
       }
       // check port is open
@@ -343,26 +447,38 @@ namespace ServoTester2
         tbPorts.SelectedIndex = 0;
     }
 
-    private void PortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
+    // private void PortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
+    private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
     {
-      // enter monitor
-      if (!Monitor.TryEnter(Receive, 1000))
-        return;
-      // try finally
-      try
-      {
-        // get data
-        var data = Port.Encoding.GetBytes(Port.ReadExisting());
-        // add receive data
-        Receive.AddRange(data);
-      }
-      finally
-      {
-        // exit monitor
-        Monitor.Exit(Receive);
-      }
+      this.Invoke(new EventHandler(MySerialReceived));//메인 쓰레드와 수신 쓰레드의 충돌 방지를 위해 Invoke 사용. MySerialReceived로 이동하여 추가 작업 실행.
+      // // enter monitor
+      // if (!Monitor.TryEnter(Receive, 1000))
+      //   return;
+      // // try finally
+      // try
+      // {
+      //   // get data
+      //   var data = Port.Encoding.GetBytes(Port.ReadExisting());
+      //   // byte[] data = Port.Encoding.GetBytes(Port.ReadExisting());
+      //   // add receive data
+      //   // Receive.AddRange(data);
+      //   rbuf_put(data, (ushort)(data.Count()));
+      //   // Receive.Add(data);
+      // }
+      // finally
+      // {
+      //   // // exit monitor
+      //   // Monitor.Exit(Receive);
+      // }
     }
 
+    private void MySerialReceived(object s, EventArgs e)  //여기에서 수신 데이타를 사용자의 용도에 따라 처리한다.
+    {            
+      // int ReceiveData = Port.ReadByte();  //시리얼 버터에 수신된 데이타를 ReceiveData 읽어오기
+      byte[] data = Port.Encoding.GetBytes(Port.ReadExisting());
+      rbuf_put(data, (ushort)(data.Count()));
+      // richTextBox_received.Text = richTextBox_received.Text + string.Format("{0:X2}", ReceiveData);  //int 형식을 string형식으로 변환하여 출력
+    }
     private void workTimer_Tick(object sender, EventArgs e)
     {
       
@@ -435,7 +551,7 @@ namespace ServoTester2
           {
             // request
             // Port.Write(_requestPacket, 0, _requestPacket.Length);
-            MakeAndSendData(4, 1, 0);
+            MakeAndSendData(104, 1, 0);
           }
         }
         catch (Exception ex)
@@ -445,92 +561,138 @@ namespace ServoTester2
         }
       }
 
-      // enter monitor
-      if (!Monitor.TryEnter(Receive, 50))
-        return;
-      // try finally
-      try
-      {
-        // check receive buffer
-        if (Receive.Count > 0)
-        {
-          // add analyze buffer
-          Analyze.AddRange(Receive);
-          // clear receive buffer
-          Receive.Clear();
-        }
-      }
-      finally
-      {
-        // exit monitor
-        Monitor.Exit(Receive);
-      }
+      // // enter monitor
+      // if (!Monitor.TryEnter(Receive, 50))
+      //   return;
+      // // try finally
+      // try
+      // {
+      //   // check receive buffer
+      //   if (Receive.Count > 0)
+      //   {
+      //     // add analyze buffer
+      //     Analyze.AddRange(Receive);
+      //     // clear receive buffer
+      //     Receive.Clear();
+      //   }
+      // }
+      // finally
+      // {
+      //   // exit monitor
+      //   Monitor.Exit(Receive);
+      // }
 
-      // get time
-      var time = DateTime.Now;
+      // // get time
+      // var time = DateTime.Now;
+
+      ushort cnt = 0;
+      if (RecvBuf.head < RecvBuf.tail)
+        cnt = (ushort)(RecvBuf.data.Length - RecvBuf.tail + RecvBuf.head);
+      else
+        cnt = (ushort)(RecvBuf.head - RecvBuf.tail);
+
       // check analyze buffer
-      while (Analyze.Count > 0)
+      // while (Analyze.Count > 0)
+      // for (int i = 0; i < Analyze.Count; i++)
+      for (int i = 0; i < cnt; i++)
       {
-        // get laps
-        var laps = DateTime.Now - time;
-        // check timeout
-        if (laps.TotalMilliseconds > 1000)
-          // clear analyze buffer
-          Analyze.Clear();
+        // // get laps
+        // var laps = DateTime.Now - time;
+        // // check timeout
+        // if (laps.TotalMilliseconds > 1000)
+        //   // clear analyze buffer
+        //   Analyze.Clear();
+        byte[] err = new byte[2];
+        byte data = rb_get(err);
+
+        // if (err[0] == 1)
+        //   break;
+
+        ComReadBuffer[ComReadIndex++] = data;
+        // ComReadBuffer[ComReadIndex++] = Analyze[i];
         // check header length
-        // if (Analyze.Count < 3)
-        if (Analyze.Count < 4)
-          break;
-        // get length
-        var length = (Analyze[3] << 8) | Analyze[2];
-        // check analyze count
-        if (Analyze.Count < length + 6)
-          break;
-        // get command
-        // var cmd = Analyze[1];
-        var cmd = Analyze[4];
-        var address = (Analyze[9] << 8) | Analyze[8];
-        // check command
-        switch (cmd)
+        if ((ComReadBuffer[0] == 0x5A) && (ComReadBuffer[1] == 0xA5) && (ComReadIndex >= 4))
         {
-          case 0x04:
-            // get value
-            // MotorState = ((Analyze[3] << 8) | Analyze[4]) != 0;
-            if (address == 2)
+          // get length
+          var data_length = (ComReadBuffer[3] << 8) | ComReadBuffer[2];
+          // check analyze count
+          if (ComReadIndex == (data_length + 6))
+          {
+            byte check_Command = ComReadBuffer[4];
+            byte Command = (byte)(check_Command & 0x7f);
+            byte Try_num = ComReadBuffer[7];
+            ushort StartAddress = (ushort)((ComReadBuffer[9]<<8) | (ushort)ComReadBuffer[8]);
+            ushort received_crc = (ushort)(ComReadBuffer[ComReadIndex - 2] & 0xff);
+            received_crc |= (ushort)(ComReadBuffer[ComReadIndex - 1] << 8);
+            ushort calc_crc = GetCRC(ComReadBuffer, ComReadIndex);
+            ComReadIndex = 0;
+            if (calc_crc == received_crc)
             {
-              MotorState = ((Analyze[11] << 8) | Analyze[10]) != 0;
-              // CalibStepState = ((Analyze[11] << 8) | Analyze[10]);
-              // CalibResultState = ((Analyze[11] << 8) | Analyze[10]);
+              if (Command != 3)
+              {
+                Command_List_Pc[Command_Index_Pc, 0] = Command;
+                Command_List_Pc[Command_Index_Pc, 1] = StartAddress;
+                Command_List_Pc[Command_Index_Pc, 2] = 0;
+                Command_Index_Pc++;
+                if (Command_Index_Pc >= COMMAND_LIST_NUM)
+                  Command_Index_Pc = 0;
+              }
+              // check command
+              switch (Command)
+              {
+                case 104:
+                  // get value
+                  // MotorState = ((ComReadBuffer[3] << 8) | ComReadBuffer[4]) != 0;
+                  if (StartAddress == 1)
+                  {
+
+                  }
+                  else if (StartAddress == 2)
+                  {
+                    MotorState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]) != 0;
+                    // CalibStepState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
+                    // CalibResultState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
+                  }
+                  break;
+                case 106:
+                  break;
+                case 7:
+                  if (StartAddress == 101)
+                  {
+                    int CalibStepState1 = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
+                    if (CalibStepState1 == 0)
+                      CalibStepState = 0;
+                    else if (CalibStepState1 == 1)
+                      CalibStepState = 1;
+                    else if (CalibStepState1 == 2 || CalibStepState1 == 3)
+                      CalibStepState = 2;
+                    else if (CalibStepState1 == 4 || CalibStepState1 == 5)
+                      CalibStepState = 3;
+                    else
+                      CalibStepState = 4;
+                  }
+                  else if (StartAddress == 12)
+                  {
+                    CalibResultState = ((ComReadBuffer[11] << 11) | ComReadBuffer[10]);
+                  }
+                  break;
+                default:
+                  break;
+              }
             }
-            break;
-          case 0x06:
-            break;
-          case 7:
-            if (address == 2)
+            else
             {
-              int CalibStepState1 = ((Analyze[11] << 8) | Analyze[10]);
-              if (CalibStepState1 == 0)
-                CalibStepState = 0;
-              else if (CalibStepState1 == 1)
-                CalibStepState = 1;
-              else if (CalibStepState1 == 2 || CalibStepState1 == 3)
-                CalibStepState = 2;
-              else if (CalibStepState1 == 4 || CalibStepState1 == 5)
-                CalibStepState = 3;
-              else
-                CalibStepState = 4;
+              // AckSend(Command, Try_num, StartAddress, 2);       // return check CRC error
             }
-            else if (address == 3)
-            {
-              CalibResultState = ((Analyze[11] << 11) | Analyze[10]);
-            }
-            break;
-          default:
-            break;
+          }
         }
-        // clear analyze buffer
-        Analyze.Clear();
+        else if (((ComReadIndex > 0) && (ComReadBuffer[0] != 0x5A))  // check packet error
+            || ((ComReadIndex > 1) && (ComReadBuffer[1] != 0xA5)))  // check packet error
+        {
+          ComReadIndex = 0;// no return Ack
+        }
       }
+      // Analyze.Clear();
     }
 
     private static IEnumerable<byte> GetCrc(IEnumerable<byte> packet)

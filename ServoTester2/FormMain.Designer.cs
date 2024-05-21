@@ -54,6 +54,8 @@ namespace ServoTester2
             System.Windows.Forms.Label label3;
             System.Windows.Forms.GroupBox groupBox3;
             System.Windows.Forms.GroupBox groupBox4;
+            System.Windows.Forms.GroupBox groupBox7;
+            System.Windows.Forms.Label label21;
             this.btRefresh = new System.Windows.Forms.Button();
             this.btOpen = new System.Windows.Forms.Button();
             this.tbBaudrate = new System.Windows.Forms.ComboBox();
@@ -93,6 +95,10 @@ namespace ServoTester2
             this.btCalibStop = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.tbAckMessage = new System.Windows.Forms.TextBox();
+            this.btTqOffsetStart = new System.Windows.Forms.Button();
+            this.btTqOffsetStop = new System.Windows.Forms.Button();
+            this.btTqOffsetSet = new System.Windows.Forms.Button();
+            this.tbTqOffsetValue = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -117,6 +123,8 @@ namespace ServoTester2
             label3 = new System.Windows.Forms.Label();
             groupBox3 = new System.Windows.Forms.GroupBox();
             groupBox4 = new System.Windows.Forms.GroupBox();
+            groupBox7 = new System.Windows.Forms.GroupBox();
+            label21 = new System.Windows.Forms.Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeedFFgain)).BeginInit();
@@ -137,6 +145,7 @@ namespace ServoTester2
             groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -149,14 +158,14 @@ namespace ServoTester2
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new System.Drawing.Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new System.Drawing.Size(560, 100);
+            groupBox1.Size = new System.Drawing.Size(281, 81);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Connection setting";
             // 
             // btRefresh
             // 
-            this.btRefresh.Location = new System.Drawing.Point(238, 26);
+            this.btRefresh.Location = new System.Drawing.Point(180, 19);
             this.btRefresh.Name = "btRefresh";
             this.btRefresh.Size = new System.Drawing.Size(94, 23);
             this.btRefresh.TabIndex = 5;
@@ -166,7 +175,7 @@ namespace ServoTester2
             // 
             // btOpen
             // 
-            this.btOpen.Location = new System.Drawing.Point(238, 60);
+            this.btOpen.Location = new System.Drawing.Point(180, 51);
             this.btOpen.Name = "btOpen";
             this.btOpen.Size = new System.Drawing.Size(94, 23);
             this.btOpen.TabIndex = 4;
@@ -185,15 +194,15 @@ namespace ServoTester2
             "38400",
             "19200",
             "9600"});
-            this.tbBaudrate.Location = new System.Drawing.Point(94, 62);
+            this.tbBaudrate.Location = new System.Drawing.Point(73, 53);
             this.tbBaudrate.Name = "tbBaudrate";
-            this.tbBaudrate.Size = new System.Drawing.Size(121, 20);
+            this.tbBaudrate.Size = new System.Drawing.Size(99, 20);
             this.tbBaudrate.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(23, 65);
+            label2.Location = new System.Drawing.Point(9, 58);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(55, 12);
             label2.TabIndex = 2;
@@ -203,15 +212,15 @@ namespace ServoTester2
             // 
             this.tbPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tbPorts.FormattingEnabled = true;
-            this.tbPorts.Location = new System.Drawing.Point(94, 28);
+            this.tbPorts.Location = new System.Drawing.Point(74, 21);
             this.tbPorts.Name = "tbPorts";
-            this.tbPorts.Size = new System.Drawing.Size(121, 20);
+            this.tbPorts.Size = new System.Drawing.Size(98, 20);
             this.tbPorts.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(23, 31);
+            label1.Location = new System.Drawing.Point(10, 25);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(27, 12);
             label1.TabIndex = 0;
@@ -897,11 +906,73 @@ namespace ServoTester2
             this.tbAckMessage.Size = new System.Drawing.Size(100, 21);
             this.tbAckMessage.TabIndex = 0;
             // 
+            // groupBox7
+            // 
+            groupBox7.Controls.Add(label21);
+            groupBox7.Controls.Add(this.tbTqOffsetValue);
+            groupBox7.Controls.Add(this.btTqOffsetSet);
+            groupBox7.Controls.Add(this.btTqOffsetStart);
+            groupBox7.Controls.Add(this.btTqOffsetStop);
+            groupBox7.Location = new System.Drawing.Point(299, 12);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new System.Drawing.Size(281, 81);
+            groupBox7.TabIndex = 6;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "Torque offset setting";
+            // 
+            // btTqOffsetStart
+            // 
+            this.btTqOffsetStart.Location = new System.Drawing.Point(16, 20);
+            this.btTqOffsetStart.Name = "btTqOffsetStart";
+            this.btTqOffsetStart.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetStart.TabIndex = 5;
+            this.btTqOffsetStart.Text = "Start";
+            this.btTqOffsetStart.UseVisualStyleBackColor = true;
+            this.btTqOffsetStart.Click += new System.EventHandler(this.btTqOffset_Click);
+            // 
+            // btTqOffsetStop
+            // 
+            this.btTqOffsetStop.Location = new System.Drawing.Point(116, 20);
+            this.btTqOffsetStop.Name = "btTqOffsetStop";
+            this.btTqOffsetStop.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetStop.TabIndex = 4;
+            this.btTqOffsetStop.Text = "Stop";
+            this.btTqOffsetStop.UseVisualStyleBackColor = true;
+            this.btTqOffsetStop.Click += new System.EventHandler(this.btTqOffset_Click);
+            // 
+            // btTqOffsetSet
+            // 
+            this.btTqOffsetSet.Location = new System.Drawing.Point(165, 49);
+            this.btTqOffsetSet.Name = "btTqOffsetSet";
+            this.btTqOffsetSet.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetSet.TabIndex = 6;
+            this.btTqOffsetSet.Text = "Set Offset";
+            this.btTqOffsetSet.UseVisualStyleBackColor = true;
+            this.btTqOffsetSet.Click += new System.EventHandler(this.btTqOffset_Click);
+            // 
+            // tbTqOffsetValue
+            // 
+            this.tbTqOffsetValue.Enabled = false;
+            this.tbTqOffsetValue.Location = new System.Drawing.Point(52, 50);
+            this.tbTqOffsetValue.Name = "tbTqOffsetValue";
+            this.tbTqOffsetValue.Size = new System.Drawing.Size(100, 21);
+            this.tbTqOffsetValue.TabIndex = 7;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new System.Drawing.Point(10, 55);
+            label21.Name = "label21";
+            label21.Size = new System.Drawing.Size(41, 12);
+            label21.TabIndex = 6;
+            label21.Text = "Offset:";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(groupBox4);
@@ -938,6 +1009,8 @@ namespace ServoTester2
             this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -983,6 +1056,10 @@ namespace ServoTester2
         private System.Windows.Forms.Button btCalibStop;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox tbAckMessage;
+        private System.Windows.Forms.Button btTqOffsetStart;
+        private System.Windows.Forms.Button btTqOffsetStop;
+        private System.Windows.Forms.Button btTqOffsetSet;
+        private System.Windows.Forms.TextBox tbTqOffsetValue;
     }
 }
 
