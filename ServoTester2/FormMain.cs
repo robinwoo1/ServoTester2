@@ -14,12 +14,12 @@ namespace ServoTester2
   public partial class FormMain : Form
   {
       // private readonly byte[] _requestPacket = { 0x01, 0x04, 0x01, 0x00, 0x00, 0x01, 0x30, 0x36 };
-      public const ushort SERIAL_BUF_SIZE = 128;
+      public const ushort SERIAL_BUF_SIZE = 128*8;
       public const ushort COMMAND_LIST_NUM = 1000;
       public const int _LengthLow = 2;
       public const int _LengthHigh = 3;
       private List<byte> _requestPacket;
-      public byte[] SendDataPacket = new byte[100];
+      public byte[] SendDataPacket = new byte[128 * 8];
 
       /// <summary>
       ///     Constructor
@@ -37,7 +37,7 @@ namespace ServoTester2
       private int CalibStepState;// { CALIB_SUCCESS, CALIB_FAIL, CALIB_USERSTOP }
       private int CalibResultState;// { get; set; }
       private int time_tick;
-      public byte[] ComReadBuffer = new byte[128];
+      public byte[] ComReadBuffer = new byte[128 * 8];
       public int ComReadIndex = 0;
       public ushort Command_Index_Pc;
       public ushort[,] Command_List_Pc = new ushort[COMMAND_LIST_NUM, 3];
@@ -119,27 +119,22 @@ namespace ServoTester2
 
       public void SendPacket(byte[] Packet, ushort Cnt)
       {
-        if (Port.IsOpen && Cnt > 0)
+        try
+        {
+          if (Port.IsOpen && Cnt > 0)
           Port.Write(Packet, 0, Cnt);
+        }
+        finally
+        {
+
+        }
       }
       public void MakeAndSendData(byte Command, ushort StartAddress, short Data)
       {
         ushort PtrCnt = 0;
         ushort calc_crc = 0;
-        if (Command == 104)
-        {
-          // if (StartAddress == 1)
-          {
-            MakePacket(Command, StartAddress, Data);
-            PtrCnt = CmdAck.PtrCnt;
-            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
-            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
-            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
-            // Port.Write(SendDataPacket, 0, PtrCnt);
-            SendPacket(SendDataPacket, PtrCnt);
-          }
-        }
-        else if (Command == 106)
+        
+        if (Command == 2)
         {
           // if (StartAddress == 1)
           {
@@ -153,6 +148,32 @@ namespace ServoTester2
           }
         }
         else if (Command == 7)
+        {
+          // if (StartAddress == 1)
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            // Port.Write(SendDataPacket, 0, PtrCnt);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+        }
+        else if (Command == 104)
+        {
+          // if (StartAddress == 1)
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            // Port.Write(SendDataPacket, 0, PtrCnt);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+        }
+        else if (Command == 106)
         {
           // if (StartAddress == 1)
           {
@@ -297,10 +318,10 @@ namespace ServoTester2
           // try catch
           try
           {
-            // stop timer
-            workTimer.Stop();
             // close
             Port.Close();
+            // stop timer
+            workTimer.Stop();
             // change button text
             btOpen.Text = @"Open";
           }
@@ -336,6 +357,9 @@ namespace ServoTester2
     }
     private void btTqOffset_Click(object sender, EventArgs e)
     {
+      if (!Port.IsOpen)
+        return;
+      
       // switch(sender)
       // {
       //   case btTqOffsetStart:
@@ -350,20 +374,38 @@ namespace ServoTester2
       // }
       if (sender == btTqOffsetStart)
       {
-        MakeAndSendData(7, 13, 1);
+        if (btTqOffsetStart.Text == @"Start")
+        {
+          MakeAndSendData(7, 13, 1);
+          btTqOffsetSet.Enabled = true;
+          btTqOffsetStart.Text = @"Stop";
+        }
+        else
+        {
+          MakeAndSendData(7, 13, 0);
+          btTqOffsetSet.Enabled = false;
+          btTqOffsetStart.Text = @"Start";
+        }
       }
-      else if (sender == btTqOffsetStop)
-      {
-        MakeAndSendData(7, 13, 0);
-      }
+      // else if (sender == btTqOffsetStop)
+      // {
+      //   MakeAndSendData(7, 13, 0);
+      // }
       else if (sender == btTqOffsetSet)
       {
         MakeAndSendData(7, 9, 0);
       }
     }
-
+    private void btAlarmReset_Click(object sender, EventArgs e)
+    {
+      if (!Port.IsOpen)
+        return;
+      MakeAndSendData(2, 6, 0);
+    }
     private void btCalibrationCommand_Click(object sender, EventArgs e)
     {
+      if (!Port.IsOpen)
+        return;
       if (sender == btCalibStart)
       {
         MakeAndSendData(7, 11, 1);
@@ -450,7 +492,15 @@ namespace ServoTester2
     // private void PortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
     private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
     {
-      this.Invoke(new EventHandler(MySerialReceived));//메인 쓰레드와 수신 쓰레드의 충돌 방지를 위해 Invoke 사용. MySerialReceived로 이동하여 추가 작업 실행.
+      try
+      {
+        if (Port.IsOpen)
+          this.Invoke(new EventHandler(MySerialReceived));//메인 쓰레드와 수신 쓰레드의 충돌 방지를 위해 Invoke 사용. MySerialReceived로 이동하여 추가 작업 실행.
+      }
+      finally
+      {
+
+      }
       // // enter monitor
       // if (!Monitor.TryEnter(Receive, 1000))
       //   return;
@@ -473,10 +523,19 @@ namespace ServoTester2
     }
 
     private void MySerialReceived(object s, EventArgs e)  //여기에서 수신 데이타를 사용자의 용도에 따라 처리한다.
-    {            
-      // int ReceiveData = Port.ReadByte();  //시리얼 버터에 수신된 데이타를 ReceiveData 읽어오기
-      byte[] data = Port.Encoding.GetBytes(Port.ReadExisting());
-      rbuf_put(data, (ushort)(data.Count()));
+    {
+      try
+      {
+        // int ReceiveData = Port.ReadByte();  //시리얼 버터에 수신된 데이타를 ReceiveData 읽어오기
+        byte[] data = Port.Encoding.GetBytes(Port.ReadExisting());
+        rbuf_put(data, (ushort)(data.Count()));
+
+        ProcessPcMcReceivedCommData();
+      }
+      finally
+      {
+
+      }
       // richTextBox_received.Text = richTextBox_received.Text + string.Format("{0:X2}", ReceiveData);  //int 형식을 string형식으로 변환하여 출력
     }
     private void workTimer_Tick(object sender, EventArgs e)
@@ -584,7 +643,11 @@ namespace ServoTester2
 
       // // get time
       // var time = DateTime.Now;
-
+      // ProcessPcMcReceivedCommData();
+      // Analyze.Clear();
+    }
+    public void ProcessPcMcReceivedCommData()
+    {
       ushort cnt = 0;
       if (RecvBuf.head < RecvBuf.tail)
         cnt = (ushort)(RecvBuf.data.Length - RecvBuf.tail + RecvBuf.head);
@@ -640,26 +703,19 @@ namespace ServoTester2
               // check command
               switch (Command)
               {
-                case 104:
-                  // get value
-                  // MotorState = ((ComReadBuffer[3] << 8) | ComReadBuffer[4]) != 0;
-                  if (StartAddress == 1)
-                  {
-
-                  }
-                  else if (StartAddress == 2)
-                  {
-                    MotorState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]) != 0;
-                    // CalibStepState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
-                    // CalibResultState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
-                  }
+                case 2:
                   break;
-                case 106:
+                case 3:// Pc <- Mc
+                  ushort TqOffsetValue = (ushort)((ComReadBuffer[13] << 8) | ComReadBuffer[12]);
+                  tbTqOffsetValue.Text = TqOffsetValue.ToString();
+                  ushort Error = (ushort)((ComReadBuffer[27] << 8) | ComReadBuffer[26]);
+                  tbError.Text = Error.ToString();
+                  MotorState = ((ComReadBuffer[25] << 8) | ComReadBuffer[24]) != 0;
                   break;
                 case 7:
-                  if (StartAddress == 101)
+                  if (StartAddress == 101)// Pc <- Mc
                   {
-                    int CalibStepState1 = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
+                    int CalibStepState1 = (int)((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
                     if (CalibStepState1 == 0)
                       CalibStepState = 0;
                     else if (CalibStepState1 == 1)
@@ -670,11 +726,31 @@ namespace ServoTester2
                       CalibStepState = 3;
                     else
                       CalibStepState = 4;
+                    AckSend(Command, Try_num, StartAddress, 0);       // return Ack OK
                   }
-                  else if (StartAddress == 12)
+                  else if (StartAddress == 12)// Pc <- Mc
                   {
-                    CalibResultState = ((ComReadBuffer[11] << 11) | ComReadBuffer[10]);
+                    CalibResultState = (int)((ComReadBuffer[11] << 11) | ComReadBuffer[10]);
+                    AckSend(Command, Try_num, StartAddress, 0);       // return Ack OK
                   }
+                  // else if (StartAddress == 13)// Pc -> Mc
+                  
+                  break;
+                case 104:
+                  // get value
+                  // MotorState = ((ComReadBuffer[3] << 8) | ComReadBuffer[4]) != 0;
+                  if (StartAddress == 1)// Pc -> Mc
+                  {
+
+                  }
+                  else if (StartAddress == 2)// Pc <- Mc
+                  {
+                    MotorState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]) != 0;
+                    // CalibStepState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
+                    // CalibResultState = ((ComReadBuffer[11] << 8) | ComReadBuffer[10]);
+                  }
+                  break;
+                case 106:
                   break;
                 default:
                   break;
@@ -692,8 +768,43 @@ namespace ServoTester2
           ComReadIndex = 0;// no return Ack
         }
       }
-      // Analyze.Clear();
     }
+    
+// send ack code
+private void AckSend(byte command, byte Try_num, ushort StartAddress, byte code)
+{
+  ushort u16PtrCnt = 0, calc_crc;
+  byte[] DataPacket = new byte[20];
+
+  DataPacket[u16PtrCnt++] = 0x5A;    // Start low
+  DataPacket[u16PtrCnt++] = 0xA5;		// Start high
+  DataPacket[u16PtrCnt++] = 0;			  // Length low
+  DataPacket[u16PtrCnt++] = 0;		    // Length high
+  if (code != 0)
+    DataPacket[u16PtrCnt++] = (byte)(0x80 | command);		  // Function code
+  else
+    DataPacket[u16PtrCnt++] = command;		  // Function code
+  DataPacket[u16PtrCnt++] = 0;		    // revision low, 1byte
+  DataPacket[u16PtrCnt++] = 0;		    // revision high, 1byte
+  DataPacket[u16PtrCnt++] = Try_num; // u8LcdMcComReadBuffer[7];		  // Try num.
+  DataPacket[u16PtrCnt++] = (byte)(StartAddress);  	// Start Address low
+  DataPacket[u16PtrCnt++] = (byte)(StartAddress>>8);	  // Start Address high
+  DataPacket[u16PtrCnt++] = code;		// return ack code
+  DataPacket[u16PtrCnt++] = 0;		    // 
+  DataPacket[u16PtrCnt++] = 0;		    // reserved
+  DataPacket[u16PtrCnt++] = 0;		    // reserved
+
+  ushort Length = (ushort)(u16PtrCnt - 4);
+  DataPacket[_LengthLow] = (byte)(Length);	  // Length low
+  DataPacket[_LengthHigh] = (byte)(Length>>8);	  // Length high
+  
+  calc_crc = GetCRC(DataPacket, u16PtrCnt+2);
+  DataPacket[u16PtrCnt++] = (byte)(calc_crc & 0xff);
+  DataPacket[u16PtrCnt++] = (byte)((calc_crc >> 8) & 0xff);
+
+  // SerialPuts_Pc((uint16_t)u16PtrCnt, (uint8_t*)DataPacket);
+  SendPacket(DataPacket, u16PtrCnt);
+}
 
     private static IEnumerable<byte> GetCrc(IEnumerable<byte> packet)
     {
