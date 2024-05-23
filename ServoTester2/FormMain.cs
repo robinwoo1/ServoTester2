@@ -710,9 +710,9 @@ namespace ServoTester2
                   tbTqSensorValue.Text = TqSensorValue.ToString();
                   ushort TqOffsetValue = (ushort)((ComReadBuffer[15] << 8) | ComReadBuffer[14]);
                   tbTqOffsetValue.Text = TqOffsetValue.ToString();
-                  ushort Error = (ushort)((ComReadBuffer[27] << 8) | ComReadBuffer[26]);
+                  ushort Error = (ushort)((ComReadBuffer[29] << 8) | ComReadBuffer[28]);
                   tbError.Text = Error.ToString();
-                  MotorState = ((ComReadBuffer[25] << 8) | ComReadBuffer[24]) != 0;
+                  MotorState = ((ComReadBuffer[27] << 8) | ComReadBuffer[26]) != 0;
                   break;
                 case 7:
                   if (StartAddress == 101)// Pc <- Mc
