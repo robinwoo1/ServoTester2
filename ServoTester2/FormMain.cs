@@ -706,7 +706,9 @@ namespace ServoTester2
                 case 2:
                   break;
                 case 3:// Pc <- Mc
-                  ushort TqOffsetValue = (ushort)((ComReadBuffer[13] << 8) | ComReadBuffer[12]);
+                  ushort TqSensorValue = (ushort)((ComReadBuffer[13] << 8) | ComReadBuffer[12]);
+                  tbTqSensorValue.Text = TqSensorValue.ToString();
+                  ushort TqOffsetValue = (ushort)((ComReadBuffer[15] << 8) | ComReadBuffer[14]);
                   tbTqOffsetValue.Text = TqOffsetValue.ToString();
                   ushort Error = (ushort)((ComReadBuffer[27] << 8) | ComReadBuffer[26]);
                   tbError.Text = Error.ToString();
