@@ -37,6 +37,8 @@ namespace ServoTester2
       private int CalibStepState;// { CALIB_SUCCESS, CALIB_FAIL, CALIB_USERSTOP }
       private int CalibResultState;// { get; set; }
       private int time_tick;
+      private int timer_working = 0;
+      private int port_working = 0;
       public byte[] ComReadBuffer = new byte[128 * 8];
       public int ComReadIndex = 0;
       public ushort Command_Index_Pc;
@@ -322,8 +324,10 @@ namespace ServoTester2
           try
           {
             // close
+            while (port_working > 0){}
             Port.Close();
             // stop timer
+            while (timer_working > 0){}
             workTimer.Stop();
             // change button text
             btOpen.Text = @"Open";
@@ -495,6 +499,7 @@ namespace ServoTester2
     // private void PortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
     private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
     {
+      port_working = 1;
       try
       {
         if (Port.IsOpen)
@@ -523,6 +528,7 @@ namespace ServoTester2
       //   // // exit monitor
       //   // Monitor.Exit(Receive);
       // }
+      port_working = 0;
     }
 
     private void MySerialReceived(object s, EventArgs e)  //여기에서 수신 데이타를 사용자의 용도에 따라 처리한다.
@@ -543,7 +549,7 @@ namespace ServoTester2
     }
     private void workTimer_Tick(object sender, EventArgs e)
     {
-      
+      timer_working = 1;
       time_tick++;
       tbAckMessage.Text = time_tick.ToString();
       // check motor state
@@ -602,26 +608,26 @@ namespace ServoTester2
           tbCalibUserStop.Checked = true;
           break;
       }
-      // check is open
-      if (Port.IsOpen)
-      {
-        // try catch
-        try
-        {
-          // check state
-          if (tbState.Checked)
-          {
-            // request
-            // Port.Write(_requestPacket, 0, _requestPacket.Length);
-            MakeAndSendData(104, 1, 0);
-          }
-        }
-        catch (Exception ex)
-        {
-          // debug
-          Debug.WriteLine(ex.Message);
-        }
-      }
+      // // check is open
+      // if (Port.IsOpen)
+      // {
+      //   // try catch
+      //   try
+      //   {
+      //     // check state
+      //     if (tbState.Checked)
+      //     {
+      //       // request
+      //       // Port.Write(_requestPacket, 0, _requestPacket.Length);
+      //       MakeAndSendData(104, 1, 0);
+      //     }
+      //   }
+      //   catch (Exception ex)
+      //   {
+      //     // debug
+      //     Debug.WriteLine(ex.Message);
+      //   }
+      // }
 
       // // enter monitor
       // if (!Monitor.TryEnter(Receive, 50))
@@ -648,6 +654,7 @@ namespace ServoTester2
       // var time = DateTime.Now;
       // ProcessPcMcReceivedCommData();
       // Analyze.Clear();
+      timer_working = 0;
     }
     public void ProcessPcMcReceivedCommData()
     {
