@@ -294,6 +294,9 @@ namespace ServoTester2
           // try catch
           try
           {
+            ComReadIndex = 0;
+            RecvBuf.tail = 0;
+            RecvBuf.head = 0;
             // set port
             Port.PortName = port;
             Port.BaudRate = baudrate;
