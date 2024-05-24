@@ -55,9 +55,9 @@ namespace ServoTester2
             System.Windows.Forms.GroupBox groupBox3;
             System.Windows.Forms.GroupBox groupBox4;
             System.Windows.Forms.GroupBox groupBox7;
+            System.Windows.Forms.Label label23;
             System.Windows.Forms.Label label21;
             System.Windows.Forms.Label label22;
-            System.Windows.Forms.Label label23;
             this.btRefresh = new System.Windows.Forms.Button();
             this.btOpen = new System.Windows.Forms.Button();
             this.tbBaudrate = new System.Windows.Forms.ComboBox();
@@ -91,9 +91,10 @@ namespace ServoTester2
             this.tbForward = new System.Windows.Forms.RadioButton();
             this.tbHold = new System.Windows.Forms.RadioButton();
             this.tbNone = new System.Windows.Forms.RadioButton();
+            this.tbTqOffsetValue = new System.Windows.Forms.TextBox();
             this.tbTqSensorValue = new System.Windows.Forms.TextBox();
-            this.btTqOffsetSet = new System.Windows.Forms.Button();
-            this.btTqOffsetStart = new System.Windows.Forms.Button();
+            this.btTqOffsetSave = new System.Windows.Forms.Button();
+            this.btTqOffsetCheck = new System.Windows.Forms.Button();
             this.workTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btCalibStart = new System.Windows.Forms.Button();
@@ -102,7 +103,6 @@ namespace ServoTester2
             this.tbAckMessage = new System.Windows.Forms.TextBox();
             this.btAlarmReset = new System.Windows.Forms.Button();
             this.tbError = new System.Windows.Forms.TextBox();
-            this.tbTqOffsetValue = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -128,9 +128,9 @@ namespace ServoTester2
             groupBox3 = new System.Windows.Forms.GroupBox();
             groupBox4 = new System.Windows.Forms.GroupBox();
             groupBox7 = new System.Windows.Forms.GroupBox();
+            label23 = new System.Windows.Forms.Label();
             label21 = new System.Windows.Forms.Label();
             label22 = new System.Windows.Forms.Label();
-            label23 = new System.Windows.Forms.Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeedFFgain)).BeginInit();
@@ -866,14 +866,31 @@ namespace ServoTester2
             groupBox7.Controls.Add(label23);
             groupBox7.Controls.Add(label21);
             groupBox7.Controls.Add(this.tbTqSensorValue);
-            groupBox7.Controls.Add(this.btTqOffsetSet);
-            groupBox7.Controls.Add(this.btTqOffsetStart);
+            groupBox7.Controls.Add(this.btTqOffsetSave);
+            groupBox7.Controls.Add(this.btTqOffsetCheck);
             groupBox7.Location = new System.Drawing.Point(299, 12);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new System.Drawing.Size(281, 112);
             groupBox7.TabIndex = 6;
             groupBox7.TabStop = false;
             groupBox7.Text = "Torque offset setting";
+            // 
+            // tbTqOffsetValue
+            // 
+            this.tbTqOffsetValue.Enabled = false;
+            this.tbTqOffsetValue.Location = new System.Drawing.Point(99, 84);
+            this.tbTqOffsetValue.Name = "tbTqOffsetValue";
+            this.tbTqOffsetValue.Size = new System.Drawing.Size(100, 21);
+            this.tbTqOffsetValue.TabIndex = 9;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new System.Drawing.Point(10, 90);
+            label23.Name = "label23";
+            label23.Size = new System.Drawing.Size(75, 12);
+            label23.TabIndex = 8;
+            label23.Text = "Offset value:";
             // 
             // label21
             // 
@@ -892,26 +909,26 @@ namespace ServoTester2
             this.tbTqSensorValue.Size = new System.Drawing.Size(100, 21);
             this.tbTqSensorValue.TabIndex = 7;
             // 
-            // btTqOffsetSet
+            // btTqOffsetSave
             // 
-            this.btTqOffsetSet.Enabled = false;
-            this.btTqOffsetSet.Location = new System.Drawing.Point(163, 19);
-            this.btTqOffsetSet.Name = "btTqOffsetSet";
-            this.btTqOffsetSet.Size = new System.Drawing.Size(94, 23);
-            this.btTqOffsetSet.TabIndex = 6;
-            this.btTqOffsetSet.Text = "Set Offset";
-            this.btTqOffsetSet.UseVisualStyleBackColor = true;
-            this.btTqOffsetSet.Click += new System.EventHandler(this.btTqOffset_Click);
+            this.btTqOffsetSave.Enabled = false;
+            this.btTqOffsetSave.Location = new System.Drawing.Point(163, 19);
+            this.btTqOffsetSave.Name = "btTqOffsetSave";
+            this.btTqOffsetSave.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetSave.TabIndex = 6;
+            this.btTqOffsetSave.Text = "Save Offset";
+            this.btTqOffsetSave.UseVisualStyleBackColor = true;
+            this.btTqOffsetSave.Click += new System.EventHandler(this.btTqOffset_Click);
             // 
-            // btTqOffsetStart
+            // btTqOffsetCheck
             // 
-            this.btTqOffsetStart.Location = new System.Drawing.Point(16, 20);
-            this.btTqOffsetStart.Name = "btTqOffsetStart";
-            this.btTqOffsetStart.Size = new System.Drawing.Size(94, 23);
-            this.btTqOffsetStart.TabIndex = 5;
-            this.btTqOffsetStart.Text = "Start";
-            this.btTqOffsetStart.UseVisualStyleBackColor = true;
-            this.btTqOffsetStart.Click += new System.EventHandler(this.btTqOffset_Click);
+            this.btTqOffsetCheck.Location = new System.Drawing.Point(16, 20);
+            this.btTqOffsetCheck.Name = "btTqOffsetCheck";
+            this.btTqOffsetCheck.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetCheck.TabIndex = 5;
+            this.btTqOffsetCheck.Text = "Check Offset";
+            this.btTqOffsetCheck.UseVisualStyleBackColor = true;
+            this.btTqOffsetCheck.Click += new System.EventHandler(this.btTqOffset_Click);
             // 
             // label22
             // 
@@ -992,23 +1009,6 @@ namespace ServoTester2
             this.tbError.Name = "tbError";
             this.tbError.Size = new System.Drawing.Size(100, 21);
             this.tbError.TabIndex = 8;
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Location = new System.Drawing.Point(10, 90);
-            label23.Name = "label23";
-            label23.Size = new System.Drawing.Size(75, 12);
-            label23.TabIndex = 8;
-            label23.Text = "Offset value:";
-            // 
-            // tbTqOffsetValue
-            // 
-            this.tbTqOffsetValue.Enabled = false;
-            this.tbTqOffsetValue.Location = new System.Drawing.Point(99, 84);
-            this.tbTqOffsetValue.Name = "tbTqOffsetValue";
-            this.tbTqOffsetValue.Size = new System.Drawing.Size(100, 21);
-            this.tbTqOffsetValue.TabIndex = 9;
             // 
             // FormMain
             // 
@@ -1103,8 +1103,8 @@ namespace ServoTester2
         private System.Windows.Forms.Button btCalibStop;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox tbAckMessage;
-        private System.Windows.Forms.Button btTqOffsetStart;
-        private System.Windows.Forms.Button btTqOffsetSet;
+        private System.Windows.Forms.Button btTqOffsetCheck;
+        private System.Windows.Forms.Button btTqOffsetSave;
         private System.Windows.Forms.TextBox tbTqSensorValue;
         private System.Windows.Forms.Button btAlarmReset;
         private System.Windows.Forms.TextBox tbError;

@@ -44,6 +44,41 @@ namespace ServoTester2
       public ushort Command_Index_Pc;
       public ushort[,] Command_List_Pc = new ushort[COMMAND_LIST_NUM, 3];
       public List<byte> SendByte {get; set;} = new List<byte>();
+      public struct _DriverInfoStruct
+      {
+        public ushort  u16Type;                      // 1 
+        public ushort  u16Version;                   // 2
+        public ushort   u8Factory_Gear_efficiency;    // 3
+        public ushort   u8User_Gear_efficiency;       // 4
+        public ushort  u16Serial_low;                // 5
+        public ushort  u16Serial_high;               // 6
+        public ushort  u16MaintenanceCount_low;      // 7
+        public ushort  u16MaintenanceCount_high;     // 8
+        public ushort  u16WarningMaintenanceCount;   // 9
+        public ushort  u16TorqueOffset;              // 10
+        public ushort  u16LED_Band;                  // 11
+        public ushort  u16Temperature;               // 12
+        public ushort  u16Initial_Angle;             // 13
+        public ushort  u16Error;                     // 14
+        public _DriverInfoStruct(ushort u16Type_)
+        {
+          this.u16Type = u16Type_;
+          this.u16Version = 0;
+          this.u8Factory_Gear_efficiency = 0;
+          this.u8User_Gear_efficiency = 0;
+          this.u16Serial_low = 0;
+          this.u16Serial_high = 0;
+          this.u16MaintenanceCount_low = 0;
+          this.u16MaintenanceCount_high = 0;
+          this.u16WarningMaintenanceCount = 0;
+          this.u16TorqueOffset = 0;
+          this.u16LED_Band = 0;
+          this.u16Temperature = 0;
+          this.u16Initial_Angle = 0;
+          this.u16Error = 0;
+        }
+      }
+      _DriverInfoStruct DriverInfo = new _DriverInfoStruct(0);
       public struct CmdAck_
       {
         public byte Command;
@@ -56,6 +91,7 @@ namespace ServoTester2
           this.StartAddress = StartAddress_;
         }
       }
+      CmdAck_ CmdAck = new CmdAck_( 0, 0, 0);
       public struct RecvBuf_
       {
         public ushort head;
@@ -68,7 +104,6 @@ namespace ServoTester2
           this.data = new byte[num];
         }
       }
-      CmdAck_ CmdAck = new CmdAck_( 0, 0, 0);
       RecvBuf_ RecvBuf = new RecvBuf_(SERIAL_BUF_SIZE);
       public int rbuf_put(byte[] rbuf, ushort rsize)
       {
@@ -151,7 +186,17 @@ namespace ServoTester2
         }
         else if (Command == 7)
         {
-          // if (StartAddress == 1)
+          if (StartAddress == 13)
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            // Port.Write(SendDataPacket, 0, PtrCnt);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+          else
           {
             MakePacket(Command, StartAddress, Data);
             PtrCnt = CmdAck.PtrCnt;
@@ -226,7 +271,12 @@ namespace ServoTester2
       }
       else if (Command == 7) // parameter
       {
-        // if (StartAddress == 1)
+        if (StartAddress == 13)
+        {
+          SendDataPacket[u16PtrCnt++] = (byte)(DriverInfo.u16TorqueOffset >> 0);
+          SendDataPacket[u16PtrCnt++] = (byte)(DriverInfo.u16TorqueOffset >> 8);
+        }
+        else
         {
           SendDataPacket[u16PtrCnt++] = (byte)(Data >> 0);
           SendDataPacket[u16PtrCnt++] = (byte)(Data >> 8);
@@ -379,28 +429,14 @@ namespace ServoTester2
       //     MakeAndSendData(7, 9, 0);
       //     break;
       // }
-      if (sender == btTqOffsetStart)
-      {
-        if (btTqOffsetStart.Text == @"Start")
-        {
-          MakeAndSendData(7, 13, 1);
-          btTqOffsetSet.Enabled = true;
-          btTqOffsetStart.Text = @"Stop";
-        }
-        else
-        {
-          MakeAndSendData(7, 13, 0);
-          btTqOffsetSet.Enabled = false;
-          btTqOffsetStart.Text = @"Start";
-        }
-      }
-      // else if (sender == btTqOffsetStop)
-      // {
-      //   MakeAndSendData(7, 13, 0);
-      // }
-      else if (sender == btTqOffsetSet)
+      if (sender == btTqOffsetCheck)
       {
         MakeAndSendData(7, 9, 0);
+        btTqOffsetSave.Enabled = true;
+      }
+      else if (sender == btTqOffsetSave)
+      {
+        MakeAndSendData(7, 13, 0);
       }
     }
     private void btAlarmReset_Click(object sender, EventArgs e)
@@ -715,10 +751,11 @@ namespace ServoTester2
               {
                 case 2:
                   break;
-                case 3:// Pc <- Mc
+                case 3:// Pc <- Mc, Cyclic
                   ushort TqSensorValue = (ushort)((ComReadBuffer[13] << 8) | ComReadBuffer[12]);
                   tbTqSensorValue.Text = TqSensorValue.ToString();
                   ushort TqOffsetValue = (ushort)((ComReadBuffer[15] << 8) | ComReadBuffer[14]);
+                  DriverInfo.u16TorqueOffset = TqOffsetValue;
                   tbTqOffsetValue.Text = TqOffsetValue.ToString();
                   ushort Error = (ushort)((ComReadBuffer[29] << 8) | ComReadBuffer[28]);
                   tbError.Text = Error.ToString();
