@@ -58,6 +58,7 @@ namespace ServoTester2
             System.Windows.Forms.Label label23;
             System.Windows.Forms.Label label21;
             System.Windows.Forms.Label label22;
+            System.Windows.Forms.Label label24;
             this.btRefresh = new System.Windows.Forms.Button();
             this.btOpen = new System.Windows.Forms.Button();
             this.tbBaudrate = new System.Windows.Forms.ComboBox();
@@ -103,6 +104,7 @@ namespace ServoTester2
             this.tbAckMessage = new System.Windows.Forms.TextBox();
             this.btAlarmReset = new System.Windows.Forms.Button();
             this.tbError = new System.Windows.Forms.TextBox();
+            this.tbMaintCnt = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -131,6 +133,7 @@ namespace ServoTester2
             label23 = new System.Windows.Forms.Label();
             label21 = new System.Windows.Forms.Label();
             label22 = new System.Windows.Forms.Label();
+            label24 = new System.Windows.Forms.Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeedFFgain)).BeginInit();
@@ -164,7 +167,7 @@ namespace ServoTester2
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new System.Drawing.Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new System.Drawing.Size(281, 81);
+            groupBox1.Size = new System.Drawing.Size(281, 83);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Connection setting";
@@ -870,7 +873,7 @@ namespace ServoTester2
             groupBox7.Controls.Add(this.btTqOffsetCheck);
             groupBox7.Location = new System.Drawing.Point(299, 12);
             groupBox7.Name = "groupBox7";
-            groupBox7.Size = new System.Drawing.Size(281, 112);
+            groupBox7.Size = new System.Drawing.Size(281, 83);
             groupBox7.TabIndex = 6;
             groupBox7.TabStop = false;
             groupBox7.Text = "Torque offset setting";
@@ -878,7 +881,7 @@ namespace ServoTester2
             // tbTqOffsetValue
             // 
             this.tbTqOffsetValue.Enabled = false;
-            this.tbTqOffsetValue.Location = new System.Drawing.Point(99, 84);
+            this.tbTqOffsetValue.Location = new System.Drawing.Point(99, 59);
             this.tbTqOffsetValue.Name = "tbTqOffsetValue";
             this.tbTqOffsetValue.Size = new System.Drawing.Size(100, 21);
             this.tbTqOffsetValue.TabIndex = 9;
@@ -886,7 +889,7 @@ namespace ServoTester2
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new System.Drawing.Point(10, 90);
+            label23.Location = new System.Drawing.Point(10, 63);
             label23.Name = "label23";
             label23.Size = new System.Drawing.Size(75, 12);
             label23.TabIndex = 8;
@@ -895,7 +898,7 @@ namespace ServoTester2
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new System.Drawing.Point(10, 55);
+            label21.Location = new System.Drawing.Point(10, 40);
             label21.Name = "label21";
             label21.Size = new System.Drawing.Size(82, 12);
             label21.TabIndex = 6;
@@ -904,7 +907,7 @@ namespace ServoTester2
             // tbTqSensorValue
             // 
             this.tbTqSensorValue.Enabled = false;
-            this.tbTqSensorValue.Location = new System.Drawing.Point(99, 51);
+            this.tbTqSensorValue.Location = new System.Drawing.Point(99, 35);
             this.tbTqSensorValue.Name = "tbTqSensorValue";
             this.tbTqSensorValue.Size = new System.Drawing.Size(100, 21);
             this.tbTqSensorValue.TabIndex = 7;
@@ -912,9 +915,9 @@ namespace ServoTester2
             // btTqOffsetSave
             // 
             this.btTqOffsetSave.Enabled = false;
-            this.btTqOffsetSave.Location = new System.Drawing.Point(163, 19);
+            this.btTqOffsetSave.Location = new System.Drawing.Point(163, 16);
             this.btTqOffsetSave.Name = "btTqOffsetSave";
-            this.btTqOffsetSave.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetSave.Size = new System.Drawing.Size(94, 18);
             this.btTqOffsetSave.TabIndex = 6;
             this.btTqOffsetSave.Text = "Save Offset";
             this.btTqOffsetSave.UseVisualStyleBackColor = true;
@@ -922,9 +925,9 @@ namespace ServoTester2
             // 
             // btTqOffsetCheck
             // 
-            this.btTqOffsetCheck.Location = new System.Drawing.Point(16, 20);
+            this.btTqOffsetCheck.Location = new System.Drawing.Point(16, 16);
             this.btTqOffsetCheck.Name = "btTqOffsetCheck";
-            this.btTqOffsetCheck.Size = new System.Drawing.Size(94, 23);
+            this.btTqOffsetCheck.Size = new System.Drawing.Size(94, 18);
             this.btTqOffsetCheck.TabIndex = 5;
             this.btTqOffsetCheck.Text = "Check Offset";
             this.btTqOffsetCheck.UseVisualStyleBackColor = true;
@@ -933,7 +936,7 @@ namespace ServoTester2
             // label22
             // 
             label22.AutoSize = true;
-            label22.Location = new System.Drawing.Point(12, 96);
+            label22.Location = new System.Drawing.Point(12, 101);
             label22.Name = "label22";
             label22.Size = new System.Drawing.Size(36, 12);
             label22.TabIndex = 8;
@@ -994,7 +997,7 @@ namespace ServoTester2
             // 
             // btAlarmReset
             // 
-            this.btAlarmReset.Location = new System.Drawing.Point(160, 93);
+            this.btAlarmReset.Location = new System.Drawing.Point(160, 96);
             this.btAlarmReset.Name = "btAlarmReset";
             this.btAlarmReset.Size = new System.Drawing.Size(94, 23);
             this.btAlarmReset.TabIndex = 41;
@@ -1005,16 +1008,35 @@ namespace ServoTester2
             // tbError
             // 
             this.tbError.Enabled = false;
-            this.tbError.Location = new System.Drawing.Point(54, 93);
+            this.tbError.Location = new System.Drawing.Point(54, 96);
             this.tbError.Name = "tbError";
             this.tbError.Size = new System.Drawing.Size(100, 21);
             this.tbError.TabIndex = 8;
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new System.Drawing.Point(314, 101);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(63, 12);
+            label24.TabIndex = 52;
+            label24.Text = "Maint Cnt:";
+            // 
+            // tbMaintCnt
+            // 
+            this.tbMaintCnt.Enabled = false;
+            this.tbMaintCnt.Location = new System.Drawing.Point(380, 96);
+            this.tbMaintCnt.Name = "tbMaintCnt";
+            this.tbMaintCnt.Size = new System.Drawing.Size(100, 21);
+            this.tbMaintCnt.TabIndex = 53;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(label24);
+            this.Controls.Add(this.tbMaintCnt);
             this.Controls.Add(this.btAlarmReset);
             this.Controls.Add(label22);
             this.Controls.Add(groupBox7);
@@ -1109,6 +1131,7 @@ namespace ServoTester2
         private System.Windows.Forms.Button btAlarmReset;
         private System.Windows.Forms.TextBox tbError;
         private System.Windows.Forms.TextBox tbTqOffsetValue;
+        private System.Windows.Forms.TextBox tbMaintCnt;
     }
 }
 

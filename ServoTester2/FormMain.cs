@@ -759,6 +759,8 @@ namespace ServoTester2
                   tbTqOffsetValue.Text = TqOffsetValue.ToString();
                   ushort Error = (ushort)((ComReadBuffer[29] << 8) | ComReadBuffer[28]);
                   tbError.Text = Error.ToString();
+                  uint MaintCnt = (uint)((ComReadBuffer[51] << 24) | (ComReadBuffer[50] << 16) | (ComReadBuffer[49] << 8) | ComReadBuffer[48]);
+                  tbMaintCnt.Text = MaintCnt.ToString();
                   MotorState = ((ComReadBuffer[27] << 8) | ComReadBuffer[26]) != 0;
                   break;
                 case 7:
