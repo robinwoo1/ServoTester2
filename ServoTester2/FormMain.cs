@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -44,6 +45,120 @@ namespace ServoTester2
       public ushort Command_Index_Pc;
       public ushort[,] Command_List_Pc = new ushort[COMMAND_LIST_NUM, 3];
       public List<byte> SendByte {get; set;} = new List<byte>();
+      public struct _para_member
+      {
+        public ushort u16MC_ZERO_DUMMY;
+        public ushort u16MC_TCAM_ACTM;                  //1
+        public float f32MC_FASTEN_TORQUE;                 //2
+        public float f32MC_TORQUE_MIN_MAX;                //3
+        public ushort u16MC_TARGET_ANGLE;               //4
+        public ushort u16MC_FASTEN_MIN_ANGLE;           //5
+        public ushort u16MC_FASTEN_MAX_ANGLE;           //6
+        public float f32MC_SNUG_TORQUE;                   //7
+        public ushort u16MC_FASTEN_SPEED;               //8
+        public ushort u16MC_FREE_FASTEN_ANGLE;          //9
+        public ushort u16MC_FREE_FASTEN_SPEED;          //10
+        public ushort u16MC_SOFT_START;                 //11
+        public ushort u16MC_FASTEN_SEATTING_POINT_RATE; //12
+        public ushort u16MC_FASTEN_TQ_RISING_TIME;      //13
+        public ushort u16MC_RAMP_UP_SPEED;              //14
+        public ushort u16MC_TORQUE_COMPENSATION;        //15
+        public ushort u16MC_TORQUE_OFFSET;              //16
+        public ushort u16MC_MAX_PULSE_COUNT;            //17
+      // } para_Val_basic;
+      // typedef struct
+      // {
+        public ushort u16MC_ADVANCED_MODE;              //0
+        public float f32MC_ADVANCED_PARA1;                //1
+        public float f32MC_ADVANCED_PARA2;                //2
+        public float f32MC_ADVANCED_PARA3;                //3
+        public float f32MC_ADVANCED_PARA4;                //4
+        public float f32MC_ADVANCED_PARA5;                //5
+        public float f32MC_ADVANCED_PARA6;                //6
+        public float f32MC_ADVANCED_PARA7;                //7
+        public float f32MC_ADVANCED_PARA8;                //8
+        public float f32MC_ADVANCED_PARA9;                //9
+        public float f32MC_ADVANCED_PARA10;               //10
+        public float f32MC_ADVANCED_PARA11;               //11
+        public float f32MC_ADVANCED_PARA12;               //12
+        public float f32MC_ADVANCED_PARA13;               //13
+        public float f32MC_ADVANCED_PARA14;               //14
+        public float f32MC_ADVANCED_PARA15;               //15
+        public float f32MC_ADVANCED_PARA16;               //16
+        public float f32MC_ADVANCED_PARA17;               //17
+        public float f32MC_ADVANCED_PARA18;               //18
+        public float f32MC_ADVANCED_PARA19;               //19
+        public ushort u16MC_FREE_REVERSE_ROTATION_SPEED;//1
+        public float f32MC_FREE_REVERSE_ROTATION_ANGLE;   //2
+        public ushort u16MC_REVERS_ANGLE_SETTING_SPEED; //3
+        public ushort u16MC_REVERS_ANGLE_SETTING_ANGLE; //4
+        public ushort u16MC_REVERS_ANGLE_SETTING_FW_REV;//5
+      // } para_Val_advanced;
+      // typedef struct
+      // {
+        public ushort u16MC_DRIVER_MODEL;               //0
+        public ushort u16MC_UNIT;                       //1
+        public ushort u16MC_ACC_DEC_TIME;               //2
+        public ushort u16MC_FASTEN_TORQUE_MAINTAIN_TIME;//3
+        public ushort u16MC_USE_MAXTQ_FOR_LOOSENING;    //4
+        public ushort u16MC_LOOSENING_SPEED;            //5
+        public float f32MC_TOTAL_FASTENING_TIME;          //6
+        public float f32MC_TOTAL_LOOSENING_TIME;          //7
+        public float f32MC_INIT_LOOSENING_TIME_LIMIT;     //8
+        public ushort u16MC_SCREW_TYPE;                 //9
+        public float f32MC_JUDGE_FASTEN_MIN_TURNS;        //10
+        public ushort u16MC_FASTENING_STOP_ALARM;       //11
+        public ushort u16MC_TORQUE_COMPENSATION_MAIN;   //12
+        public ushort u16MC_CROWFOOT_ENABLE;            //13
+        public float f32MC_CROWFOOT_RATIO;                //14
+        public ushort u16MC_CROWFOOT_EFFICIENCY;        //15
+        public float f32MC_CROWFOOT_REVERSE_TORQUE;       //16
+        public ushort u16MC_CROWFOOT_REVERSE_SPEED;     //17
+      // } para_Val_etc;
+        public ushort u16MC_VERSION;
+      }
+      public struct _para
+      {
+        public _para_member val;
+        public _para_member dft;
+        public _para_member min;
+        public _para_member max;
+      }
+      _para Mc_Para;
+      public struct _dr_model
+      {
+        // MODEL
+        public ushort    u16Driver_id;
+        public ushort    u16Driver_vendor_id;
+        public ushort    u16Controller_vendor_id;      // controller model no. 1:26, 2:32
+        public ushort    u16Motor_id;          // used motor no.       1:26, 2:32
+        // TORQUE / SPEED
+        public float     f32Tq_min_Nm;         // default Nm
+        public float     f32Tq_max_Nm;         // default Nm
+        public uint      u32Speed_min;
+        public uint      u32Speed_max;
+        // SETING
+        public float     f32Gear_ratio;
+        public float     f32Angle_head_ratio;
+        // RESERVED
+        // public byte      reserved2[32];
+        public _dr_model(ushort u16Driver_id_)
+        {
+          this.u16Driver_id = u16Driver_id_;
+          this.u16Driver_vendor_id = 2;
+          this.u16Controller_vendor_id = 1;      // controller model no. 1:26, 2:32
+          this.u16Motor_id = 2;          // used motor no.       1:26, 2:32
+          // TORQUE / SPEED
+          this.f32Tq_min_Nm = 15;         // default Nm
+          this.f32Tq_max_Nm = 80;         // default Nm
+          this.u32Speed_min = 50;
+          this.u32Speed_max = 475;
+          // SETING
+          this.f32Gear_ratio = 48.8163261f;
+          this.f32Angle_head_ratio = 1.54545498f;
+        }
+      }
+      _dr_model Info_DrvModel_para = new _dr_model(0);
       public struct _DriverInfoStruct
       {
         public ushort  u16Type;                      // 1 
@@ -79,6 +194,7 @@ namespace ServoTester2
         }
       }
       _DriverInfoStruct DriverInfo = new _DriverInfoStruct(0);
+      _DriverInfoStruct outDriverInfo = new _DriverInfoStruct(0);
       public struct CmdAck_
       {
         public byte Command;
@@ -186,26 +302,75 @@ namespace ServoTester2
         }
         else if (Command == 7)
         {
-          if (StartAddress == 13)
+          if (StartAddress == 1)//download driver info
           {
             MakePacket(Command, StartAddress, Data);
             PtrCnt = CmdAck.PtrCnt;
             calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
-            // Port.Write(SendDataPacket, 0, PtrCnt);
             SendPacket(SendDataPacket, PtrCnt);
           }
-          else
+          // else if (StartAddress == 2)//upload driver info
+          else if (StartAddress == 3)//Speaker & Output
           {
             MakePacket(Command, StartAddress, Data);
             PtrCnt = CmdAck.PtrCnt;
             calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
             SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
-            // Port.Write(SendDataPacket, 0, PtrCnt);
             SendPacket(SendDataPacket, PtrCnt);
           }
+          else if (StartAddress == 4)//LED band & output
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+          // else if (StartAddress == 5)//
+          // else if (StartAddress == 6)//
+          // else if (StartAddress == 7)//
+          else if (StartAddress == 8)//reset Maintenance count
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+          // else if (StartAddress == 9)//
+          else if (StartAddress == 10)//Check torque Offset
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+          else if (StartAddress == 11)//Save torque Offset
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+          else if (StartAddress == 12)//Start Initail Angle
+          {
+            MakePacket(Command, StartAddress, Data);
+            PtrCnt = CmdAck.PtrCnt;
+            calc_crc = GetCRC(SendDataPacket, PtrCnt + 2);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 0);
+            SendDataPacket[PtrCnt++] = (byte)(calc_crc >> 8);
+            SendPacket(SendDataPacket, PtrCnt);
+          }
+          // else if (StartAddress == 13)//receive Initial Angle result
         }
         else if (Command == 104)
         {
@@ -271,6 +436,11 @@ namespace ServoTester2
       }
       else if (Command == 7) // parameter
       {
+        if (StartAddress == 1)
+        {
+          SendDataPacket[u16PtrCnt++] = (byte)(outDriverInfo.u16TorqueOffset >> 0);
+          SendDataPacket[u16PtrCnt++] = (byte)(DriverInfo.u16TorqueOffset >> 8);
+        }
         if (StartAddress == 13)
         {
           SendDataPacket[u16PtrCnt++] = (byte)(DriverInfo.u16TorqueOffset >> 0);
@@ -320,6 +490,8 @@ namespace ServoTester2
       // select baudrate
       tbBaudrate.SelectedIndex = 0;
 
+      parameterInit();
+      
       // set event
       // Port.DataReceived += PortOnDataReceived;
       Port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
@@ -431,12 +603,12 @@ namespace ServoTester2
       // }
       if (sender == btTqOffsetCheck)
       {
-        MakeAndSendData(7, 9, 0);
+        MakeAndSendData(7, 10, 0);
         btTqOffsetSave.Enabled = true;
       }
       else if (sender == btTqOffsetSave)
       {
-        MakeAndSendData(7, 13, 0);
+        MakeAndSendData(7, 11, 0);
       }
     }
     private void btAlarmReset_Click(object sender, EventArgs e)
@@ -821,41 +993,41 @@ namespace ServoTester2
       }
     }
     
-// send ack code
-private void AckSend(byte command, byte Try_num, ushort StartAddress, byte code)
-{
-  ushort u16PtrCnt = 0, calc_crc;
-  byte[] DataPacket = new byte[20];
+    // send ack code
+    private void AckSend(byte command, byte Try_num, ushort StartAddress, byte code)
+    {
+      ushort u16PtrCnt = 0, calc_crc;
+      byte[] DataPacket = new byte[20];
 
-  DataPacket[u16PtrCnt++] = 0x5A;    // Start low
-  DataPacket[u16PtrCnt++] = 0xA5;		// Start high
-  DataPacket[u16PtrCnt++] = 0;			  // Length low
-  DataPacket[u16PtrCnt++] = 0;		    // Length high
-  if (code != 0)
-    DataPacket[u16PtrCnt++] = (byte)(0x80 | command);		  // Function code
-  else
-    DataPacket[u16PtrCnt++] = command;		  // Function code
-  DataPacket[u16PtrCnt++] = 0;		    // revision low, 1byte
-  DataPacket[u16PtrCnt++] = 0;		    // revision high, 1byte
-  DataPacket[u16PtrCnt++] = Try_num; // u8LcdMcComReadBuffer[7];		  // Try num.
-  DataPacket[u16PtrCnt++] = (byte)(StartAddress);  	// Start Address low
-  DataPacket[u16PtrCnt++] = (byte)(StartAddress>>8);	  // Start Address high
-  DataPacket[u16PtrCnt++] = code;		// return ack code
-  DataPacket[u16PtrCnt++] = 0;		    // 
-  DataPacket[u16PtrCnt++] = 0;		    // reserved
-  DataPacket[u16PtrCnt++] = 0;		    // reserved
+      DataPacket[u16PtrCnt++] = 0x5A;    // Start low
+      DataPacket[u16PtrCnt++] = 0xA5;		// Start high
+      DataPacket[u16PtrCnt++] = 0;			  // Length low
+      DataPacket[u16PtrCnt++] = 0;		    // Length high
+      if (code != 0)
+        DataPacket[u16PtrCnt++] = (byte)(0x80 | command);		  // Function code
+      else
+        DataPacket[u16PtrCnt++] = command;		  // Function code
+      DataPacket[u16PtrCnt++] = 0;		    // revision low, 1byte
+      DataPacket[u16PtrCnt++] = 0;		    // revision high, 1byte
+      DataPacket[u16PtrCnt++] = Try_num; // u8LcdMcComReadBuffer[7];		  // Try num.
+      DataPacket[u16PtrCnt++] = (byte)(StartAddress);  	// Start Address low
+      DataPacket[u16PtrCnt++] = (byte)(StartAddress>>8);	  // Start Address high
+      DataPacket[u16PtrCnt++] = code;		// return ack code
+      DataPacket[u16PtrCnt++] = 0;		    // 
+      DataPacket[u16PtrCnt++] = 0;		    // reserved
+      DataPacket[u16PtrCnt++] = 0;		    // reserved
 
-  ushort Length = (ushort)(u16PtrCnt - 4);
-  DataPacket[_LengthLow] = (byte)(Length);	  // Length low
-  DataPacket[_LengthHigh] = (byte)(Length>>8);	  // Length high
-  
-  calc_crc = GetCRC(DataPacket, u16PtrCnt+2);
-  DataPacket[u16PtrCnt++] = (byte)(calc_crc & 0xff);
-  DataPacket[u16PtrCnt++] = (byte)((calc_crc >> 8) & 0xff);
+      ushort Length = (ushort)(u16PtrCnt - 4);
+      DataPacket[_LengthLow] = (byte)(Length);	  // Length low
+      DataPacket[_LengthHigh] = (byte)(Length>>8);	  // Length high
+      
+      calc_crc = GetCRC(DataPacket, u16PtrCnt+2);
+      DataPacket[u16PtrCnt++] = (byte)(calc_crc & 0xff);
+      DataPacket[u16PtrCnt++] = (byte)((calc_crc >> 8) & 0xff);
 
-  // SerialPuts_Pc((uint16_t)u16PtrCnt, (uint8_t*)DataPacket);
-  SendPacket(DataPacket, u16PtrCnt);
-}
+      // SerialPuts_Pc((uint16_t)u16PtrCnt, (uint8_t*)DataPacket);
+      SendPacket(DataPacket, u16PtrCnt);
+    }
 
     private static IEnumerable<byte> GetCrc(IEnumerable<byte> packet)
     {
@@ -903,6 +1075,136 @@ private void AckSend(byte command, byte Try_num, ushort StartAddress, byte code)
       list.AddRange(crc);
       // return
       return list;
+    }
+    private void parameterInit()
+    {
+      Mc_Para.dft.u16MC_ZERO_DUMMY=0;                 Mc_Para.min.u16MC_ZERO_DUMMY=0;                 Mc_Para.max.u16MC_ZERO_DUMMY=1;                 //dummy
+      Mc_Para.dft.u16MC_TCAM_ACTM=0;                  Mc_Para.min.u16MC_TCAM_ACTM=0;                  Mc_Para.max.u16MC_TCAM_ACTM=1;                  //SET[01] :i select torque/angle
+      Mc_Para.dft.f32MC_FASTEN_TORQUE=50;             Mc_Para.min.f32MC_FASTEN_TORQUE=30;             Mc_Para.max.f32MC_FASTEN_TORQUE=500;            //SET[02] :f toque [Nm*100]
+      Mc_Para.dft.f32MC_TORQUE_MIN_MAX=1000;          Mc_Para.min.f32MC_TORQUE_MIN_MAX=0;             Mc_Para.max.f32MC_TORQUE_MIN_MAX=10000;         //SET[03] : %  (Actually use value when initializing para)
+      Mc_Para.dft.u16MC_TARGET_ANGLE=0;               Mc_Para.min.u16MC_TARGET_ANGLE=0;               Mc_Para.max.u16MC_TARGET_ANGLE=20000;           //SET[04] : degree
+      Mc_Para.dft.u16MC_FASTEN_MIN_ANGLE=0;           Mc_Para.min.u16MC_FASTEN_MIN_ANGLE=0;           Mc_Para.max.u16MC_FASTEN_MIN_ANGLE=20000;       //SET[05] : 
+      Mc_Para.dft.u16MC_FASTEN_MAX_ANGLE=0;           Mc_Para.min.u16MC_FASTEN_MAX_ANGLE=0;           Mc_Para.max.u16MC_FASTEN_MAX_ANGLE=20000;       //SET[06] : 
+      Mc_Para.dft.f32MC_SNUG_TORQUE=0;                Mc_Para.min.f32MC_SNUG_TORQUE=0;                Mc_Para.max.f32MC_SNUG_TORQUE=100;              //SET[07] : %
+      Mc_Para.dft.u16MC_FASTEN_SPEED=300;             Mc_Para.min.u16MC_FASTEN_SPEED=100;             Mc_Para.max.u16MC_FASTEN_SPEED=2000;            //SET[08] : speed[RPM]
+      Mc_Para.dft.u16MC_FREE_FASTEN_ANGLE=0;          Mc_Para.min.u16MC_FREE_FASTEN_ANGLE=0;          Mc_Para.max.u16MC_FREE_FASTEN_ANGLE=20000;      //SET[09] : degree
+      Mc_Para.dft.u16MC_FREE_FASTEN_SPEED=0;          Mc_Para.min.u16MC_FREE_FASTEN_SPEED=0;          Mc_Para.max.u16MC_FREE_FASTEN_SPEED=1000;       //SET[10] : 
+      Mc_Para.dft.u16MC_SOFT_START=100;               Mc_Para.min.u16MC_SOFT_START=0;                 Mc_Para.max.u16MC_SOFT_START=300;               //SET[11] : 
+      Mc_Para.dft.u16MC_FASTEN_SEATTING_POINT_RATE=40;Mc_Para.min.u16MC_FASTEN_SEATTING_POINT_RATE=10;Mc_Para.max.u16MC_FASTEN_SEATTING_POINT_RATE=95;//SET[12] : %
+      Mc_Para.dft.u16MC_FASTEN_TQ_RISING_TIME=50;     Mc_Para.min.u16MC_FASTEN_TQ_RISING_TIME=50;     Mc_Para.max.u16MC_FASTEN_TQ_RISING_TIME=200;    //SET[13] : ms
+      Mc_Para.dft.u16MC_RAMP_UP_SPEED=0;              Mc_Para.min.u16MC_RAMP_UP_SPEED=0;              Mc_Para.max.u16MC_RAMP_UP_SPEED=1;              //SET[14] : speed[RPM]
+      Mc_Para.dft.u16MC_TORQUE_COMPENSATION=0;        Mc_Para.min.u16MC_TORQUE_COMPENSATION=0;        Mc_Para.max.u16MC_TORQUE_COMPENSATION=1;        //SET[15] : 
+      Mc_Para.dft.u16MC_TORQUE_OFFSET=0;              Mc_Para.min.u16MC_TORQUE_OFFSET=0;              Mc_Para.max.u16MC_TORQUE_OFFSET=20000;          //SET[16] : 
+      Mc_Para.dft.u16MC_MAX_PULSE_COUNT=0;            Mc_Para.min.u16MC_MAX_PULSE_COUNT=0;            Mc_Para.max.u16MC_MAX_PULSE_COUNT=20000;        //SET[17] : 
+      
+      Mc_Para.dft.u16MC_ADVANCED_MODE=0;              Mc_Para.min.u16MC_ADVANCED_MODE=0;              Mc_Para.max.u16MC_ADVANCED_MODE=10;                   //SET[0] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA1=0;             Mc_Para.min.f32MC_ADVANCED_PARA1=0;             Mc_Para.max.f32MC_ADVANCED_PARA1=0xffff;              //SET[1] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA2=0;             Mc_Para.min.f32MC_ADVANCED_PARA2=0;             Mc_Para.max.f32MC_ADVANCED_PARA2=0xffff;              //SET[2] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA3=0;             Mc_Para.min.f32MC_ADVANCED_PARA3=0;             Mc_Para.max.f32MC_ADVANCED_PARA3=0xffff;              //SET[3] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA4=0;             Mc_Para.min.f32MC_ADVANCED_PARA4=0;             Mc_Para.max.f32MC_ADVANCED_PARA4=0xffff;              //SET[4] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA5=0;             Mc_Para.min.f32MC_ADVANCED_PARA5=0;             Mc_Para.max.f32MC_ADVANCED_PARA5=0xffff;              //SET[5] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA6=0;             Mc_Para.min.f32MC_ADVANCED_PARA6=0;             Mc_Para.max.f32MC_ADVANCED_PARA6=0xffff;              //SET[6] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA7=0;             Mc_Para.min.f32MC_ADVANCED_PARA7=0;             Mc_Para.max.f32MC_ADVANCED_PARA7=0xffff;              //SET[7] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA8=0;             Mc_Para.min.f32MC_ADVANCED_PARA8=0;             Mc_Para.max.f32MC_ADVANCED_PARA8=0xffff;              //SET[8] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA9=0;             Mc_Para.min.f32MC_ADVANCED_PARA9=0;             Mc_Para.max.f32MC_ADVANCED_PARA9=0xffff;              //SET[9] :  
+      Mc_Para.dft.f32MC_ADVANCED_PARA10=0;            Mc_Para.min.f32MC_ADVANCED_PARA10=0;            Mc_Para.max.f32MC_ADVANCED_PARA10=0xffff;             //SET[10] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA11=0;            Mc_Para.min.f32MC_ADVANCED_PARA11=0;            Mc_Para.max.f32MC_ADVANCED_PARA11=0xffff;             //SET[11] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA12=0;            Mc_Para.min.f32MC_ADVANCED_PARA12=0;            Mc_Para.max.f32MC_ADVANCED_PARA12=0xffff;             //SET[12] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA13=0;            Mc_Para.min.f32MC_ADVANCED_PARA13=0;            Mc_Para.max.f32MC_ADVANCED_PARA13=0xffff;             //SET[13] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA14=0;            Mc_Para.min.f32MC_ADVANCED_PARA14=0;            Mc_Para.max.f32MC_ADVANCED_PARA14=0xffff;             //SET[14] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA15=0;            Mc_Para.min.f32MC_ADVANCED_PARA15=0;            Mc_Para.max.f32MC_ADVANCED_PARA15=0xffff;             //SET[15] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA16=0;            Mc_Para.min.f32MC_ADVANCED_PARA16=0;            Mc_Para.max.f32MC_ADVANCED_PARA16=0xffff;             //SET[16] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA17=0;            Mc_Para.min.f32MC_ADVANCED_PARA17=0;            Mc_Para.max.f32MC_ADVANCED_PARA17=0xffff;             //SET[17] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA18=0;            Mc_Para.min.f32MC_ADVANCED_PARA18=0;            Mc_Para.max.f32MC_ADVANCED_PARA18=0xffff;             //SET[18] : 
+      Mc_Para.dft.f32MC_ADVANCED_PARA19=0;            Mc_Para.min.f32MC_ADVANCED_PARA19=0;            Mc_Para.max.f32MC_ADVANCED_PARA19=0xffff;             //SET[19] : 
+      Mc_Para.dft.u16MC_FREE_REVERSE_ROTATION_SPEED=0;Mc_Para.min.u16MC_FREE_REVERSE_ROTATION_SPEED=0;Mc_Para.max.u16MC_FREE_REVERSE_ROTATION_SPEED=1000;   //SET[1] :  
+      Mc_Para.dft.f32MC_FREE_REVERSE_ROTATION_ANGLE=0;Mc_Para.min.f32MC_FREE_REVERSE_ROTATION_ANGLE=0;Mc_Para.max.f32MC_FREE_REVERSE_ROTATION_ANGLE=200;    //SET[2] :  
+      Mc_Para.dft.u16MC_REVERS_ANGLE_SETTING_SPEED=0; Mc_Para.min.u16MC_REVERS_ANGLE_SETTING_SPEED=0; Mc_Para.max.u16MC_REVERS_ANGLE_SETTING_SPEED=1000;    //SET[3] :  
+      Mc_Para.dft.u16MC_REVERS_ANGLE_SETTING_ANGLE=0; Mc_Para.min.u16MC_REVERS_ANGLE_SETTING_ANGLE=0; Mc_Para.max.u16MC_REVERS_ANGLE_SETTING_ANGLE=30000;   //SET[4] :  
+      Mc_Para.dft.u16MC_REVERS_ANGLE_SETTING_FW_REV=0;Mc_Para.min.u16MC_REVERS_ANGLE_SETTING_FW_REV=0;Mc_Para.max.u16MC_REVERS_ANGLE_SETTING_FW_REV=1;      //SET[5] :  
+      
+      Mc_Para.dft.u16MC_DRIVER_MODEL=2;               Mc_Para.min.u16MC_DRIVER_MODEL=1;               Mc_Para.max.u16MC_DRIVER_MODEL=99;                //SET[0] :  
+      Mc_Para.dft.u16MC_UNIT=2;                       Mc_Para.min.u16MC_UNIT=0;                       Mc_Para.max.u16MC_UNIT=6;                         //SET[1] :  
+      Mc_Para.dft.u16MC_ACC_DEC_TIME=100;             Mc_Para.min.u16MC_ACC_DEC_TIME=10;              Mc_Para.max.u16MC_ACC_DEC_TIME=1000;              //SET[2] :  
+      Mc_Para.dft.u16MC_FASTEN_TORQUE_MAINTAIN_TIME=2;Mc_Para.min.u16MC_FASTEN_TORQUE_MAINTAIN_TIME=1;Mc_Para.max.u16MC_FASTEN_TORQUE_MAINTAIN_TIME=20; //SET[3] :  
+      Mc_Para.dft.u16MC_USE_MAXTQ_FOR_LOOSENING=0;    Mc_Para.min.u16MC_USE_MAXTQ_FOR_LOOSENING=0;    Mc_Para.max.u16MC_USE_MAXTQ_FOR_LOOSENING=1;      //SET[4] :  
+      Mc_Para.dft.u16MC_LOOSENING_SPEED=500;          Mc_Para.min.u16MC_LOOSENING_SPEED=100;          Mc_Para.max.u16MC_LOOSENING_SPEED=1000;           //SET[5] :  
+      Mc_Para.dft.f32MC_TOTAL_FASTENING_TIME=100;     Mc_Para.min.f32MC_TOTAL_FASTENING_TIME=0;       Mc_Para.max.f32MC_TOTAL_FASTENING_TIME=600;       //SET[6] :  
+      Mc_Para.dft.f32MC_TOTAL_LOOSENING_TIME=100;     Mc_Para.min.f32MC_TOTAL_LOOSENING_TIME=0;       Mc_Para.max.f32MC_TOTAL_LOOSENING_TIME=600;       //SET[7] :  
+      Mc_Para.dft.f32MC_INIT_LOOSENING_TIME_LIMIT=2;  Mc_Para.min.f32MC_INIT_LOOSENING_TIME_LIMIT=1;  Mc_Para.max.f32MC_INIT_LOOSENING_TIME_LIMIT=5;    //SET[8] :  
+      Mc_Para.dft.u16MC_SCREW_TYPE=0;                 Mc_Para.min.u16MC_SCREW_TYPE=0;                 Mc_Para.max.u16MC_SCREW_TYPE=0x7fff;              //SET[9] :  
+      Mc_Para.dft.f32MC_JUDGE_FASTEN_MIN_TURNS=0;     Mc_Para.min.f32MC_JUDGE_FASTEN_MIN_TURNS=0;     Mc_Para.max.f32MC_JUDGE_FASTEN_MIN_TURNS=50;      //SET[10] : 
+      Mc_Para.dft.u16MC_FASTENING_STOP_ALARM=0;       Mc_Para.min.u16MC_FASTENING_STOP_ALARM=0;       Mc_Para.max.u16MC_FASTENING_STOP_ALARM=1;         //SET[11] : 
+      Mc_Para.dft.u16MC_TORQUE_COMPENSATION_MAIN=100; Mc_Para.min.u16MC_TORQUE_COMPENSATION_MAIN=90;  Mc_Para.max.u16MC_TORQUE_COMPENSATION_MAIN=110;   //SET[12] : 
+      Mc_Para.dft.u16MC_CROWFOOT_ENABLE=0;            Mc_Para.min.u16MC_CROWFOOT_ENABLE=0;            Mc_Para.max.u16MC_CROWFOOT_ENABLE=1;              //SET[13] : 
+      Mc_Para.dft.f32MC_CROWFOOT_RATIO=1000;          Mc_Para.min.f32MC_CROWFOOT_RATIO=0;             Mc_Para.max.f32MC_CROWFOOT_RATIO=65000;           //SET[14] : 
+      Mc_Para.dft.u16MC_CROWFOOT_EFFICIENCY=100;      Mc_Para.min.u16MC_CROWFOOT_EFFICIENCY=0;        Mc_Para.max.u16MC_CROWFOOT_EFFICIENCY=300;        //SET[15] : 
+      Mc_Para.dft.f32MC_CROWFOOT_REVERSE_TORQUE=0;    Mc_Para.min.f32MC_CROWFOOT_REVERSE_TORQUE=0;    Mc_Para.max.f32MC_CROWFOOT_REVERSE_TORQUE=500;    //SET[16] : 
+      Mc_Para.dft.u16MC_CROWFOOT_REVERSE_SPEED=50;    Mc_Para.min.u16MC_CROWFOOT_REVERSE_SPEED=0;     Mc_Para.max.u16MC_CROWFOOT_REVERSE_SPEED=100;     //SET[17] : 
+
+      Mc_Para.val.u16MC_ZERO_DUMMY = 0;     //0
+      Mc_Para.val.u16MC_TCAM_ACTM = 1;      //1
+      Mc_Para.val.f32MC_FASTEN_TORQUE = 10; //2
+      Mc_Para.val.f32MC_TORQUE_MIN_MAX = 0; //3
+      Mc_Para.val.u16MC_TARGET_ANGLE = 720;   //4
+      Mc_Para.val.u16MC_FASTEN_MIN_ANGLE = 0; //5
+      Mc_Para.val.u16MC_FASTEN_MAX_ANGLE = 0; //6
+      Mc_Para.val.f32MC_SNUG_TORQUE = 0;      //7
+      Mc_Para.val.u16MC_FASTEN_SPEED = 50;     //8
+      Mc_Para.val.u16MC_FREE_FASTEN_ANGLE = 0;  //9
+      Mc_Para.val.u16MC_FREE_FASTEN_SPEED = 0;  //10
+      Mc_Para.val.u16MC_SOFT_START = 300;         //11
+      Mc_Para.val.u16MC_FASTEN_SEATTING_POINT_RATE = 70; //12
+      Mc_Para.val.u16MC_FASTEN_TQ_RISING_TIME = 50;      //13
+      Mc_Para.val.u16MC_RAMP_UP_SPEED = 100;              //14
+      Mc_Para.val.u16MC_TORQUE_COMPENSATION = 100;        //15
+      Mc_Para.val.u16MC_TORQUE_OFFSET = 10;              //16
+      Mc_Para.val.u16MC_MAX_PULSE_COUNT = 100;            //17
+
+      Mc_Para.val.u16MC_ADVANCED_MODE = 0;              //0
+      Mc_Para.val.f32MC_ADVANCED_PARA1 = 0;             //1
+      Mc_Para.val.f32MC_ADVANCED_PARA2 = 0;             //2
+      Mc_Para.val.f32MC_ADVANCED_PARA3 = 0;             //3
+      Mc_Para.val.f32MC_ADVANCED_PARA4 = 0;             //4
+      Mc_Para.val.f32MC_ADVANCED_PARA5 = 0;             //5
+      Mc_Para.val.f32MC_ADVANCED_PARA6 = 0;             //6
+      Mc_Para.val.f32MC_ADVANCED_PARA7 = 0;             //7
+      Mc_Para.val.f32MC_ADVANCED_PARA8 = 0;             //8
+      Mc_Para.val.f32MC_ADVANCED_PARA9 = 0;             //9
+      Mc_Para.val.f32MC_ADVANCED_PARA10 = 0;             //10
+      Mc_Para.val.f32MC_ADVANCED_PARA11 = 0;             //11
+      Mc_Para.val.f32MC_ADVANCED_PARA12 = 0;             //12
+      Mc_Para.val.f32MC_ADVANCED_PARA13 = 0;             //13
+      Mc_Para.val.f32MC_ADVANCED_PARA14 = 0;             //14
+      Mc_Para.val.f32MC_ADVANCED_PARA15 = 0;             //15
+      Mc_Para.val.f32MC_ADVANCED_PARA16 = 0;             //16
+      Mc_Para.val.f32MC_ADVANCED_PARA17 = 0;             //17
+      Mc_Para.val.f32MC_ADVANCED_PARA18 = 0;             //18
+      Mc_Para.val.f32MC_ADVANCED_PARA19 = 0;             //19
+      Mc_Para.val.u16MC_FREE_REVERSE_ROTATION_SPEED = 0;             //1
+      Mc_Para.val.f32MC_FREE_REVERSE_ROTATION_ANGLE = 0;             //2
+      Mc_Para.val.u16MC_REVERS_ANGLE_SETTING_SPEED = 0;             //3
+      Mc_Para.val.u16MC_REVERS_ANGLE_SETTING_ANGLE = 0;             //4
+      Mc_Para.val.u16MC_REVERS_ANGLE_SETTING_FW_REV = 0;             //5
+
+      Mc_Para.val.u16MC_DRIVER_MODEL = 1;                 //0
+      Mc_Para.val.u16MC_UNIT = 2;                         //1
+      Mc_Para.val.u16MC_ACC_DEC_TIME = 500;                 //2
+      Mc_Para.val.u16MC_FASTEN_TORQUE_MAINTAIN_TIME = 0;  //3
+      Mc_Para.val.u16MC_USE_MAXTQ_FOR_LOOSENING = 0;      //4
+      Mc_Para.val.u16MC_LOOSENING_SPEED = 700;              //5
+      Mc_Para.val.f32MC_TOTAL_FASTENING_TIME = 10;         //6
+      Mc_Para.val.f32MC_TOTAL_LOOSENING_TIME = 10;         //7
+      Mc_Para.val.f32MC_INIT_LOOSENING_TIME_LIMIT = 0.2f;    //8
+      Mc_Para.val.u16MC_SCREW_TYPE = 0;                   //9
+      Mc_Para.val.f32MC_JUDGE_FASTEN_MIN_TURNS = 0;       //10
+      Mc_Para.val.u16MC_FASTENING_STOP_ALARM = 0;         //11
+      Mc_Para.val.u16MC_TORQUE_COMPENSATION_MAIN = 100;     //12
+      Mc_Para.val.u16MC_CROWFOOT_ENABLE = 0;              //13
+      Mc_Para.val.f32MC_CROWFOOT_RATIO = 10;               //14
+      Mc_Para.val.u16MC_CROWFOOT_EFFICIENCY = 100;          //15
+      Mc_Para.val.f32MC_CROWFOOT_REVERSE_TORQUE = 50;      //16
+      Mc_Para.val.u16MC_CROWFOOT_REVERSE_SPEED = 0;       //17
     }
   }
 }
