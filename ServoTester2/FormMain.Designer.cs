@@ -198,6 +198,7 @@ namespace ServoTester2
             this.tbBaudrate.FormattingEnabled = true;
             this.tbBaudrate.ItemHeight = 12;
             this.tbBaudrate.Items.AddRange(new object[] {
+            "230400",
             "115200",
             "57600",
             "38400",
@@ -942,6 +943,15 @@ namespace ServoTester2
             label22.TabIndex = 8;
             label22.Text = "Error:";
             // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new System.Drawing.Point(314, 101);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(63, 12);
+            label24.TabIndex = 52;
+            label24.Text = "Maint Cnt:";
+            // 
             // workTimer
             // 
             this.workTimer.Tick += new System.EventHandler(this.workTimer_Tick);
@@ -1012,15 +1022,6 @@ namespace ServoTester2
             this.tbError.Name = "tbError";
             this.tbError.Size = new System.Drawing.Size(100, 21);
             this.tbError.TabIndex = 8;
-            // 
-            // label24
-            // 
-            label24.AutoSize = true;
-            label24.Location = new System.Drawing.Point(314, 101);
-            label24.Name = "label24";
-            label24.Size = new System.Drawing.Size(63, 12);
-            label24.TabIndex = 52;
-            label24.Text = "Maint Cnt:";
             // 
             // tbMaintCnt
             // 
