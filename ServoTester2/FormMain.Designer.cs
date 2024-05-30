@@ -105,6 +105,7 @@ namespace ServoTester2
             this.btAlarmReset = new System.Windows.Forms.Button();
             this.tbError = new System.Windows.Forms.TextBox();
             this.tbMaintCnt = new System.Windows.Forms.TextBox();
+            this.btMcInit = new System.Windows.Forms.Button();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -990,9 +991,9 @@ namespace ServoTester2
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.tbAckMessage);
-            this.groupBox6.Location = new System.Drawing.Point(333, 500);
+            this.groupBox6.Location = new System.Drawing.Point(274, 500);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(239, 44);
+            this.groupBox6.Size = new System.Drawing.Size(130, 44);
             this.groupBox6.TabIndex = 51;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Ack message";
@@ -1031,11 +1032,22 @@ namespace ServoTester2
             this.tbMaintCnt.Size = new System.Drawing.Size(100, 21);
             this.tbMaintCnt.TabIndex = 53;
             // 
+            // btMcInit
+            // 
+            this.btMcInit.Location = new System.Drawing.Point(439, 512);
+            this.btMcInit.Name = "btMcInit";
+            this.btMcInit.Size = new System.Drawing.Size(94, 23);
+            this.btMcInit.TabIndex = 54;
+            this.btMcInit.Text = "McInit(No)";
+            this.btMcInit.UseVisualStyleBackColor = true;
+            this.btMcInit.Click += new System.EventHandler(this.btMcInit_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(this.btMcInit);
             this.Controls.Add(label24);
             this.Controls.Add(this.tbMaintCnt);
             this.Controls.Add(this.btAlarmReset);
@@ -1133,6 +1145,7 @@ namespace ServoTester2
         private System.Windows.Forms.TextBox tbError;
         private System.Windows.Forms.TextBox tbTqOffsetValue;
         private System.Windows.Forms.TextBox tbMaintCnt;
+        private System.Windows.Forms.Button btMcInit;
     }
 }
 
