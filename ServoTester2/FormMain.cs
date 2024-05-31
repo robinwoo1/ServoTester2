@@ -15,7 +15,7 @@ namespace ServoTester2
   public partial class FormMain : Form
   {
     // private readonly byte[] _requestPacket = { 0x01, 0x04, 0x01, 0x00, 0x00, 0x01, 0x30, 0x36 };
-    public const ushort SERIAL_BUF_SIZE = 128*8;
+    public const ushort SERIAL_BUF_SIZE = 128*16;//128*8;
     public const ushort COMMAND_LIST_NUM = 1000;
     public const byte ON = 1;
     public const byte OFF = 0;
@@ -23,7 +23,8 @@ namespace ServoTester2
     public const int _LengthHigh = 3;
     private List<byte> _requestPacket;
     public byte[] SendDataPacket = new byte[SERIAL_BUF_SIZE];
-
+    public byte[] FlagRun = new byte[10];
+    public byte[] FlagFL = new byte[10];
     /// <summary>
     ///     Constructor
     /// </summary>
@@ -42,7 +43,7 @@ namespace ServoTester2
     private int time_tick;
     private int timer_working = 0;
     private int port_working = 0;
-    public byte[] ComReadBuffer = new byte[128 * 8];
+    public byte[] ComReadBuffer = new byte[128 * 16];
     public int ComReadIndex = 0;
     public ushort Command_Index_Pc;
     public ushort[,] Command_List_Pc = new ushort[COMMAND_LIST_NUM, 3];
@@ -55,7 +56,8 @@ namespace ServoTester2
       // [FieldOffset(0)] public byte[] b;// = new byte[4];
       // [System.Runtime.InteropServices.FieldOffset(0)]
       [FieldOffset(0)] public float f;
-      [FieldOffset(0)] public uint i;
+      [FieldOffset(0)] public int i;
+      [FieldOffset(0)] public uint u;
       // [FieldOffset(0)] public byte[] b;
       // [System.Runtime.InteropServices.FieldOffset(0)]
       [FieldOffset(0)] public byte b0;
@@ -334,6 +336,8 @@ namespace ServoTester2
       {
         if ((StartAddress == 1)||(StartAddress == 2))
         {
+          SendDataPacket[u16PtrCnt++] = (byte)(Mc_Para.val.u16MC_SCREW_TYPE>>0);
+          SendDataPacket[u16PtrCnt++] = (byte)(Mc_Para.val.u16MC_SCREW_TYPE>>8);
           SendDataPacket[u16PtrCnt++] = (byte)(Mc_Para.val.u16MC_TCAM_ACTM>>0);
           SendDataPacket[u16PtrCnt++] = (byte)(Mc_Para.val.u16MC_TCAM_ACTM>>8);
           d.f = Mc_Para.val.f32MC_FASTEN_TORQUE;
@@ -583,12 +587,12 @@ namespace ServoTester2
           SendDataPacket[u16PtrCnt++] = d.b1;
           SendDataPacket[u16PtrCnt++] = d.b2;
           SendDataPacket[u16PtrCnt++] = d.b3;
-          d.f = Info_DrvModel_para.u32Speed_min;
+          d.u = Info_DrvModel_para.u32Speed_min;
           SendDataPacket[u16PtrCnt++] = d.b0;
           SendDataPacket[u16PtrCnt++] = d.b1;
           SendDataPacket[u16PtrCnt++] = d.b2;
           SendDataPacket[u16PtrCnt++] = d.b3;
-          d.f = Info_DrvModel_para.u32Speed_max;
+          d.u = Info_DrvModel_para.u32Speed_max;
           SendDataPacket[u16PtrCnt++] = d.b0;
           SendDataPacket[u16PtrCnt++] = d.b1;
           SendDataPacket[u16PtrCnt++] = d.b2;
@@ -622,10 +626,26 @@ namespace ServoTester2
           case 2://Start/Stop
             if (Data != 0)//start
             {
-              ushort Loosening_Angle_Cmd_ = 360;
+              string input = String.Empty;
+              
+              if (tbLoosenAngle.Text == "" || tbLoosenAngle.Text == "0")
+                McFlag.LoosenAngle = 0;
+              else
+              {
+                try
+                {
+                  McFlag.LoosenAngle = Int16.Parse(tbLoosenAngle.Text);
+                  // Console.WriteLine(result);
+                }
+                catch (FormatException)
+                {
+                  // Console.WriteLine($"Unable to parse '{input}'");
+                  McFlag.LoosenAngle = 0;
+                }
+              }
               SendDataPacket[u16PtrCnt++] = (byte)(Data >> 0);
-              SendDataPacket[u16PtrCnt++] = (byte)(Loosening_Angle_Cmd_ >> 0);
-              SendDataPacket[u16PtrCnt++] = (byte)(Loosening_Angle_Cmd_ >> 8);
+              SendDataPacket[u16PtrCnt++] = (byte)(McFlag.LoosenAngle >> 0);
+              SendDataPacket[u16PtrCnt++] = (byte)(McFlag.LoosenAngle >> 8);
               SendDataPacket[u16PtrCnt++] = (byte)0;
             }
             else//stop
@@ -839,6 +859,7 @@ namespace ServoTester2
       // select baudrate
       tbBaudrate.SelectedIndex = 0;
 
+      InitMcFlag();
       InitMcInfo();
       InitSyncStruct();
       InitInfo_DrvModel_para(8);//1);
@@ -935,6 +956,24 @@ namespace ServoTester2
       // if (Port.IsOpen && list.Count > 0)
       //   // write packet
       //   Port.Write(list.ToArray(), 0, list.Count);
+    }
+    private void btStartStopFL_Click(object sender, EventArgs e)
+    {
+      if (btStartStopFL.Text == "StartFL")
+      {
+        MakeAndSendData(2, 2, 1);
+      }
+      else//Loosen
+      {
+        MakeAndSendData(2, 2, 0);
+      }
+    }
+    private void btFastenLoosen_Click(object sender, EventArgs e)
+    {
+      if (btFastenLoosen.Text == "Fasten")
+        MakeAndSendData(2, 1, 0);
+      else//Loosen
+        MakeAndSendData(2, 1, 1);
     }
     private void btMcInit_Click(object sender, EventArgs e)
     {
@@ -1173,6 +1212,24 @@ namespace ServoTester2
           tbCalibUserStop.Checked = true;
           break;
       }
+      if (McFlag.b1ControlFL != 0)
+      {
+        btFastenLoosen.Text = "Fasten";
+        tbLoosenAngle.Enabled = true;
+      }
+      else
+      {
+        btFastenLoosen.Text = "Loosen";
+        tbLoosenAngle.Enabled = false;
+      }
+      if (McFlag.b1Run != 0)
+      {
+        btStartStopFL.Text = "StopFL";
+      }
+      else
+      {
+        btStartStopFL.Text = "StartFL";
+      }
       // // check is open
       // if (Port.IsOpen)
       // {
@@ -1326,6 +1383,45 @@ namespace ServoTester2
                   uint MaintCnt = (uint)((ComReadBuffer[51] << 24) | (ComReadBuffer[50] << 16) | (ComReadBuffer[49] << 8) | ComReadBuffer[48]);
                   tbMaintCnt.Text = MaintCnt.ToString();
                   MotorState = ((ComReadBuffer[27] << 8) | ComReadBuffer[26]) != 0;
+                  McFlag.b1Run = ComReadBuffer[26];
+                  McFlag.b1ControlFL = ComReadBuffer[30];
+
+                  byte b1Run = (byte)(ComReadBuffer[44] & 0x01);
+                  if (FlagRun[0] != b1Run)
+                  {
+                    MakeAndSendData(2, 2, b1Run);
+                  }
+                  // FlagRun[4] = FlagRun[3];
+                  // FlagRun[3] = FlagRun[2];
+                  FlagRun[2] = FlagRun[1];
+                  FlagRun[1] = FlagRun[0];
+                  FlagRun[0] = (byte)(ComReadBuffer[44] & 0x01);
+
+                  byte b1ControlFL = (byte)(ComReadBuffer[44] & 0x02);
+                  if (FlagFL[0] != b1ControlFL)
+                  {
+                    if (b1ControlFL != 0)
+                      MakeAndSendData(2, 1, 1);
+                    else
+                      MakeAndSendData(2, 1, 0);
+                  }
+                  // FlagFL[4] = FlagFL[3];
+                  // FlagFL[3] = FlagFL[2];
+                  FlagFL[2] = FlagFL[1];
+                  FlagFL[1] = FlagFL[0];
+                  FlagFL[0] = b1ControlFL;
+                  break;
+                case 4:
+                  if (StartAddress == 1)
+                  {
+                    AckSend(Command, 0, StartAddress, 0);       // return Ack OK
+                  }
+                  break;
+                case 5:
+                  if (StartAddress == 1)
+                  {
+                    AckSend(Command, 0, StartAddress, 0);       // return Ack OK
+                  }
                   break;
                 case 6:
                   break;
@@ -1665,15 +1761,77 @@ namespace ServoTester2
       Mc_Para.val.f32MC_CROWFOOT_REVERSE_TORQUE = 50;      //16
       Mc_Para.val.u16MC_CROWFOOT_REVERSE_SPEED = 0;       //17
     }
-        
-    // public struct _SyncBitsStruct
-    // {
-    //   public ushort b1OnOff;
-    //   public ushort b1ResumeOnOff;
-    //   public ushort b1Master;
-    //   public ushort b1SyncIn;
-    //   public ushort b1SyncOut;
-    // };
+    public struct _McFlag
+    {
+      public byte b1Run                            ;   // #00
+      public byte b1Reset                          ;   // #01
+      public byte b1ControlFL                      ;   // #02     Forward/reverse distinction.
+      public short LoosenAngle                    ;
+      public byte b1Lock                           ;   // #03     Run driver lock.
+      public byte b1Stopping                       ;   // #04     stop process start
+      public byte b1Multi_Mode                     ;   // #05     select mult mode
+      public byte b1Multi_Start                    ;   // #06     start mult sequence by IO or start switch
+      public byte b1TorqueUpCompleteOut            ;   // #07
+      public byte b1FasteningCompleteOut           ;   // #08
+      public byte b2LockCommand                    ;   // #09 #10 driver lock type
+      public byte b1Buzzer                         ;   // #11     buzzer control
+      public byte b1ReceiveModBusData              ;   // #12
+      public byte b1InternalRun                    ;   // #13     driver start switch
+      public byte b1ExternalRun                    ;   // #14     IO start
+      public byte b1RunByMult                      ;   // #15     Run inside Multisequence start..
+      public byte b1JabCompliteIoOut               ;   // #16     Flag_JabCompliteIOOut io output..
+      public byte b1FirmwareUpdate                 ;   // #17 
+      public byte b1CountStartSensorSignalResult   ;   // #18 A signal considering the delay time of the sensor input.
+      public byte b1ParaStartInitialize            ;   // #19
+      public byte b1ParaInitialized                ;   // #20
+      public byte b1SaveDrvModel                   ;   // #21
+      public byte b1OneTimeExecute                 ;   // #22 Executed only once during initial booting.
+      public byte b1ResetSystem                    ;   // #23 reset System.
+      public byte b1SendHostCTqNotComplete         ;   // #24 Step definition that increases c tq value..
+      public byte b1FasteningStopAlarm             ;   // #25 Stop before fastening after start..
+      public byte b1FoundEngagingTorque            ;   // #26
+      public byte b1Reached_LITTLE_REWIND          ;   // #27 if error appier display torque.
+      public byte b1DriverParaInit                 ;   // #28 driver parameter init request
+      public byte b1DriverSaveParaData             ;   // #29
+      public byte b1EnableCyclic                   ;   // #30 enable cyclic
+      public byte b1Ready                          ;
+    }
+    _McFlag McFlag;
+    void InitMcFlag()
+    {
+      McFlag.b1Run                            = 0;   // #00
+      McFlag.b1Reset                          = 0;   // #01
+      McFlag.b1ControlFL                      = 0;   // #02     Forward/reverse distinction.
+      McFlag.LoosenAngle                      = 0;
+      McFlag.b1Lock                           = 0;   // #03     Run driver lock.
+      McFlag.b1Stopping                       = 0;   // #04     stop process start
+      McFlag.b1Multi_Mode                     = 0;   // #05     select mult mode
+      McFlag.b1Multi_Start                    = 0;   // #06     start mult sequence by IO or start switch
+      McFlag.b1TorqueUpCompleteOut            = 0;   // #07
+      McFlag.b1FasteningCompleteOut           = 0;   // #08
+      McFlag.b2LockCommand                    = 0;   // #09 #10 driver lock type
+      McFlag.b1Buzzer                         = 0;   // #11     buzzer control
+      McFlag.b1ReceiveModBusData              = 0;   // #12
+      McFlag.b1InternalRun                    = 0;   // #13     driver start switch
+      McFlag.b1ExternalRun                    = 0;   // #14     IO start
+      McFlag.b1RunByMult                      = 0;   // #15     Run inside Multisequence start..
+      McFlag.b1JabCompliteIoOut               = 0;   // #16     Flag_JabCompliteIOOut io output..
+      McFlag.b1FirmwareUpdate                 = 0;   // #17 
+      McFlag.b1CountStartSensorSignalResult   = 0;   // #18 A signal considering the delay time of the sensor input.
+      McFlag.b1ParaStartInitialize            = 0;   // #19
+      McFlag.b1ParaInitialized                = 0;   // #20
+      McFlag.b1SaveDrvModel                   = 0;   // #21
+      McFlag.b1OneTimeExecute                 = 0;   // #22 Executed only once during initial booting.
+      McFlag.b1ResetSystem                    = 0;   // #23 reset System.
+      McFlag.b1SendHostCTqNotComplete         = 0;   // #24 Step definition that increases c tq value..
+      McFlag.b1FasteningStopAlarm             = 0;   // #25 Stop before fastening after start..
+      McFlag.b1FoundEngagingTorque            = 0;   // #26
+      McFlag.b1Reached_LITTLE_REWIND          = 0;   // #27 if error appier display torque.
+      McFlag.b1DriverParaInit                 = 0;   // #28 driver parameter init request
+      McFlag.b1DriverSaveParaData             = 0;   // #29
+      McFlag.b1EnableCyclic                   = 0;   // #30 enable cyclic
+      McFlag.b1Ready                          = 0;
+    }
     public struct _SyncStruct
     {
       public ushort  u16WaitingBeforeSync;

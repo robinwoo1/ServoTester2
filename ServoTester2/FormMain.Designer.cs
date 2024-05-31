@@ -106,6 +106,10 @@ namespace ServoTester2
             this.tbError = new System.Windows.Forms.TextBox();
             this.tbMaintCnt = new System.Windows.Forms.TextBox();
             this.btMcInit = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btFastenLoosen = new System.Windows.Forms.Button();
+            this.btStartStopFL = new System.Windows.Forms.Button();
+            this.tbLoosenAngle = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -156,6 +160,7 @@ namespace ServoTester2
             groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -754,7 +759,7 @@ namespace ServoTester2
             groupBox3.Controls.Add(this.tbCalibSuccess);
             groupBox3.Location = new System.Drawing.Point(12, 603);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new System.Drawing.Size(560, 45);
+            groupBox3.Size = new System.Drawing.Size(256, 45);
             groupBox3.TabIndex = 2;
             groupBox3.TabStop = false;
             groupBox3.Text = "Calibration Result";
@@ -763,7 +768,7 @@ namespace ServoTester2
             // 
             this.tbCalibUserStop.AutoSize = true;
             this.tbCalibUserStop.Cursor = System.Windows.Forms.Cursors.No;
-            this.tbCalibUserStop.Location = new System.Drawing.Point(213, 20);
+            this.tbCalibUserStop.Location = new System.Drawing.Point(159, 20);
             this.tbCalibUserStop.Name = "tbCalibUserStop";
             this.tbCalibUserStop.Size = new System.Drawing.Size(88, 16);
             this.tbCalibUserStop.TabIndex = 48;
@@ -774,7 +779,7 @@ namespace ServoTester2
             // 
             this.tbCalibFail.AutoSize = true;
             this.tbCalibFail.Cursor = System.Windows.Forms.Cursors.No;
-            this.tbCalibFail.Location = new System.Drawing.Point(124, 20);
+            this.tbCalibFail.Location = new System.Drawing.Point(103, 20);
             this.tbCalibFail.Name = "tbCalibFail";
             this.tbCalibFail.Size = new System.Drawing.Size(48, 16);
             this.tbCalibFail.TabIndex = 47;
@@ -786,7 +791,7 @@ namespace ServoTester2
             this.tbCalibSuccess.AutoSize = true;
             this.tbCalibSuccess.Checked = true;
             this.tbCalibSuccess.Cursor = System.Windows.Forms.Cursors.No;
-            this.tbCalibSuccess.Location = new System.Drawing.Point(35, 20);
+            this.tbCalibSuccess.Location = new System.Drawing.Point(15, 20);
             this.tbCalibSuccess.Name = "tbCalibSuccess";
             this.tbCalibSuccess.Size = new System.Drawing.Size(81, 16);
             this.tbCalibSuccess.TabIndex = 46;
@@ -1042,11 +1047,52 @@ namespace ServoTester2
             this.btMcInit.UseVisualStyleBackColor = true;
             this.btMcInit.Click += new System.EventHandler(this.btMcInit_Click);
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.tbLoosenAngle);
+            this.groupBox8.Controls.Add(this.btFastenLoosen);
+            this.groupBox8.Controls.Add(this.btStartStopFL);
+            this.groupBox8.Location = new System.Drawing.Point(289, 604);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(283, 44);
+            this.groupBox8.TabIndex = 51;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Fasten/Loosen";
+            // 
+            // btFastenLoosen
+            // 
+            this.btFastenLoosen.Location = new System.Drawing.Point(6, 15);
+            this.btFastenLoosen.Name = "btFastenLoosen";
+            this.btFastenLoosen.Size = new System.Drawing.Size(64, 23);
+            this.btFastenLoosen.TabIndex = 7;
+            this.btFastenLoosen.Text = "Loosen";
+            this.btFastenLoosen.UseVisualStyleBackColor = true;
+            this.btFastenLoosen.Click += new System.EventHandler(this.btFastenLoosen_Click);
+            // 
+            // btStartStopFL
+            // 
+            this.btStartStopFL.Location = new System.Drawing.Point(199, 16);
+            this.btStartStopFL.Name = "btStartStopFL";
+            this.btStartStopFL.Size = new System.Drawing.Size(67, 23);
+            this.btStartStopFL.TabIndex = 6;
+            this.btStartStopFL.Text = "StartFL";
+            this.btStartStopFL.UseVisualStyleBackColor = true;
+            this.btStartStopFL.Click += new System.EventHandler(this.btStartStopFL_Click);
+            // 
+            // tbLoosenAngle
+            // 
+            this.tbLoosenAngle.Enabled = false;
+            this.tbLoosenAngle.Location = new System.Drawing.Point(76, 16);
+            this.tbLoosenAngle.Name = "tbLoosenAngle";
+            this.tbLoosenAngle.Size = new System.Drawing.Size(100, 21);
+            this.tbLoosenAngle.TabIndex = 1;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.btMcInit);
             this.Controls.Add(label24);
             this.Controls.Add(this.tbMaintCnt);
@@ -1092,6 +1138,8 @@ namespace ServoTester2
             this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1146,6 +1194,10 @@ namespace ServoTester2
         private System.Windows.Forms.TextBox tbTqOffsetValue;
         private System.Windows.Forms.TextBox tbMaintCnt;
         private System.Windows.Forms.Button btMcInit;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button btFastenLoosen;
+        private System.Windows.Forms.Button btStartStopFL;
+        private System.Windows.Forms.TextBox tbLoosenAngle;
     }
 }
 
