@@ -59,6 +59,7 @@ namespace ServoTester2
             System.Windows.Forms.Label label21;
             System.Windows.Forms.Label label22;
             System.Windows.Forms.Label label24;
+            System.Windows.Forms.Label label25;
             this.btRefresh = new System.Windows.Forms.Button();
             this.btOpen = new System.Windows.Forms.Button();
             this.tbBaudrate = new System.Windows.Forms.ComboBox();
@@ -107,9 +108,10 @@ namespace ServoTester2
             this.tbMaintCnt = new System.Windows.Forms.TextBox();
             this.btMcInit = new System.Windows.Forms.Button();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.tbLoosenAngle = new System.Windows.Forms.TextBox();
             this.btFastenLoosen = new System.Windows.Forms.Button();
             this.btStartStopFL = new System.Windows.Forms.Button();
-            this.tbLoosenAngle = new System.Windows.Forms.TextBox();
+            this.tbEnc = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -139,6 +141,7 @@ namespace ServoTester2
             label21 = new System.Windows.Forms.Label();
             label22 = new System.Windows.Forms.Label();
             label24 = new System.Windows.Forms.Label();
+            label25 = new System.Windows.Forms.Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeedFFgain)).BeginInit();
@@ -173,16 +176,16 @@ namespace ServoTester2
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new System.Drawing.Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new System.Drawing.Size(281, 83);
+            groupBox1.Size = new System.Drawing.Size(239, 83);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Connection setting";
             // 
             // btRefresh
             // 
-            this.btRefresh.Location = new System.Drawing.Point(180, 19);
+            this.btRefresh.Location = new System.Drawing.Point(154, 19);
             this.btRefresh.Name = "btRefresh";
-            this.btRefresh.Size = new System.Drawing.Size(94, 23);
+            this.btRefresh.Size = new System.Drawing.Size(79, 23);
             this.btRefresh.TabIndex = 5;
             this.btRefresh.Text = "Port refresh";
             this.btRefresh.UseVisualStyleBackColor = true;
@@ -190,9 +193,9 @@ namespace ServoTester2
             // 
             // btOpen
             // 
-            this.btOpen.Location = new System.Drawing.Point(180, 51);
+            this.btOpen.Location = new System.Drawing.Point(154, 51);
             this.btOpen.Name = "btOpen";
-            this.btOpen.Size = new System.Drawing.Size(94, 23);
+            this.btOpen.Size = new System.Drawing.Size(79, 23);
             this.btOpen.TabIndex = 4;
             this.btOpen.Text = "Open";
             this.btOpen.UseVisualStyleBackColor = true;
@@ -204,21 +207,23 @@ namespace ServoTester2
             this.tbBaudrate.FormattingEnabled = true;
             this.tbBaudrate.ItemHeight = 12;
             this.tbBaudrate.Items.AddRange(new object[] {
+            "921600",
+            "460800",
             "230400",
             "115200",
             "57600",
             "38400",
             "19200",
             "9600"});
-            this.tbBaudrate.Location = new System.Drawing.Point(73, 53);
+            this.tbBaudrate.Location = new System.Drawing.Point(64, 53);
             this.tbBaudrate.Name = "tbBaudrate";
-            this.tbBaudrate.Size = new System.Drawing.Size(99, 20);
+            this.tbBaudrate.Size = new System.Drawing.Size(85, 20);
             this.tbBaudrate.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(9, 58);
+            label2.Location = new System.Drawing.Point(4, 58);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(55, 12);
             label2.TabIndex = 2;
@@ -228,15 +233,15 @@ namespace ServoTester2
             // 
             this.tbPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tbPorts.FormattingEnabled = true;
-            this.tbPorts.Location = new System.Drawing.Point(74, 21);
+            this.tbPorts.Location = new System.Drawing.Point(64, 21);
             this.tbPorts.Name = "tbPorts";
-            this.tbPorts.Size = new System.Drawing.Size(98, 20);
+            this.tbPorts.Size = new System.Drawing.Size(85, 20);
             this.tbPorts.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(10, 25);
+            label1.Location = new System.Drawing.Point(5, 25);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(27, 12);
             label1.TabIndex = 0;
@@ -878,9 +883,9 @@ namespace ServoTester2
             groupBox7.Controls.Add(this.tbTqSensorValue);
             groupBox7.Controls.Add(this.btTqOffsetSave);
             groupBox7.Controls.Add(this.btTqOffsetCheck);
-            groupBox7.Location = new System.Drawing.Point(299, 12);
+            groupBox7.Location = new System.Drawing.Point(256, 12);
             groupBox7.Name = "groupBox7";
-            groupBox7.Size = new System.Drawing.Size(281, 83);
+            groupBox7.Size = new System.Drawing.Size(199, 83);
             groupBox7.TabIndex = 6;
             groupBox7.TabStop = false;
             groupBox7.Text = "Torque offset setting";
@@ -888,15 +893,16 @@ namespace ServoTester2
             // tbTqOffsetValue
             // 
             this.tbTqOffsetValue.Enabled = false;
-            this.tbTqOffsetValue.Location = new System.Drawing.Point(99, 59);
+            this.tbTqOffsetValue.Location = new System.Drawing.Point(91, 59);
             this.tbTqOffsetValue.Name = "tbTqOffsetValue";
             this.tbTqOffsetValue.Size = new System.Drawing.Size(100, 21);
             this.tbTqOffsetValue.TabIndex = 9;
+            this.tbTqOffsetValue.Text = "0";
             // 
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new System.Drawing.Point(10, 63);
+            label23.Location = new System.Drawing.Point(6, 63);
             label23.Name = "label23";
             label23.Size = new System.Drawing.Size(75, 12);
             label23.TabIndex = 8;
@@ -905,7 +911,7 @@ namespace ServoTester2
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new System.Drawing.Point(10, 40);
+            label21.Location = new System.Drawing.Point(6, 40);
             label21.Name = "label21";
             label21.Size = new System.Drawing.Size(82, 12);
             label21.TabIndex = 6;
@@ -914,17 +920,18 @@ namespace ServoTester2
             // tbTqSensorValue
             // 
             this.tbTqSensorValue.Enabled = false;
-            this.tbTqSensorValue.Location = new System.Drawing.Point(99, 35);
+            this.tbTqSensorValue.Location = new System.Drawing.Point(91, 35);
             this.tbTqSensorValue.Name = "tbTqSensorValue";
             this.tbTqSensorValue.Size = new System.Drawing.Size(100, 21);
             this.tbTqSensorValue.TabIndex = 7;
+            this.tbTqSensorValue.Text = "0";
             // 
             // btTqOffsetSave
             // 
             this.btTqOffsetSave.Enabled = false;
-            this.btTqOffsetSave.Location = new System.Drawing.Point(163, 16);
+            this.btTqOffsetSave.Location = new System.Drawing.Point(104, 16);
             this.btTqOffsetSave.Name = "btTqOffsetSave";
-            this.btTqOffsetSave.Size = new System.Drawing.Size(94, 18);
+            this.btTqOffsetSave.Size = new System.Drawing.Size(89, 18);
             this.btTqOffsetSave.TabIndex = 6;
             this.btTqOffsetSave.Text = "Save Offset";
             this.btTqOffsetSave.UseVisualStyleBackColor = true;
@@ -932,7 +939,7 @@ namespace ServoTester2
             // 
             // btTqOffsetCheck
             // 
-            this.btTqOffsetCheck.Location = new System.Drawing.Point(16, 16);
+            this.btTqOffsetCheck.Location = new System.Drawing.Point(7, 16);
             this.btTqOffsetCheck.Name = "btTqOffsetCheck";
             this.btTqOffsetCheck.Size = new System.Drawing.Size(94, 18);
             this.btTqOffsetCheck.TabIndex = 5;
@@ -945,14 +952,14 @@ namespace ServoTester2
             label22.AutoSize = true;
             label22.Location = new System.Drawing.Point(12, 101);
             label22.Name = "label22";
-            label22.Size = new System.Drawing.Size(36, 12);
+            label22.Size = new System.Drawing.Size(75, 12);
             label22.TabIndex = 8;
-            label22.Text = "Error:";
+            label22.Text = "Error Status:";
             // 
             // label24
             // 
             label24.AutoSize = true;
-            label24.Location = new System.Drawing.Point(314, 101);
+            label24.Location = new System.Drawing.Point(259, 101);
             label24.Name = "label24";
             label24.Size = new System.Drawing.Size(63, 12);
             label24.TabIndex = 52;
@@ -1010,12 +1017,13 @@ namespace ServoTester2
             this.tbAckMessage.Name = "tbAckMessage";
             this.tbAckMessage.Size = new System.Drawing.Size(100, 21);
             this.tbAckMessage.TabIndex = 0;
+            this.tbAckMessage.Text = "0";
             // 
             // btAlarmReset
             // 
-            this.btAlarmReset.Location = new System.Drawing.Point(160, 96);
+            this.btAlarmReset.Location = new System.Drawing.Point(143, 96);
             this.btAlarmReset.Name = "btAlarmReset";
-            this.btAlarmReset.Size = new System.Drawing.Size(94, 23);
+            this.btAlarmReset.Size = new System.Drawing.Size(87, 21);
             this.btAlarmReset.TabIndex = 41;
             this.btAlarmReset.Text = "Alarm Reset";
             this.btAlarmReset.UseVisualStyleBackColor = true;
@@ -1024,18 +1032,21 @@ namespace ServoTester2
             // tbError
             // 
             this.tbError.Enabled = false;
-            this.tbError.Location = new System.Drawing.Point(54, 96);
+            this.tbError.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.tbError.Location = new System.Drawing.Point(88, 96);
             this.tbError.Name = "tbError";
-            this.tbError.Size = new System.Drawing.Size(100, 21);
+            this.tbError.Size = new System.Drawing.Size(44, 21);
             this.tbError.TabIndex = 8;
+            this.tbError.Text = "0";
             // 
             // tbMaintCnt
             // 
             this.tbMaintCnt.Enabled = false;
-            this.tbMaintCnt.Location = new System.Drawing.Point(380, 96);
+            this.tbMaintCnt.Location = new System.Drawing.Point(323, 96);
             this.tbMaintCnt.Name = "tbMaintCnt";
             this.tbMaintCnt.Size = new System.Drawing.Size(100, 21);
             this.tbMaintCnt.TabIndex = 53;
+            this.tbMaintCnt.Text = "0";
             // 
             // btMcInit
             // 
@@ -1059,6 +1070,15 @@ namespace ServoTester2
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Fasten/Loosen";
             // 
+            // tbLoosenAngle
+            // 
+            this.tbLoosenAngle.Enabled = false;
+            this.tbLoosenAngle.Location = new System.Drawing.Point(76, 16);
+            this.tbLoosenAngle.Name = "tbLoosenAngle";
+            this.tbLoosenAngle.Size = new System.Drawing.Size(100, 21);
+            this.tbLoosenAngle.TabIndex = 1;
+            this.tbLoosenAngle.Text = "0";
+            // 
             // btFastenLoosen
             // 
             this.btFastenLoosen.Location = new System.Drawing.Point(6, 15);
@@ -1079,19 +1099,31 @@ namespace ServoTester2
             this.btStartStopFL.UseVisualStyleBackColor = true;
             this.btStartStopFL.Click += new System.EventHandler(this.btStartStopFL_Click);
             // 
-            // tbLoosenAngle
+            // label25
             // 
-            this.tbLoosenAngle.Enabled = false;
-            this.tbLoosenAngle.Location = new System.Drawing.Point(76, 16);
-            this.tbLoosenAngle.Name = "tbLoosenAngle";
-            this.tbLoosenAngle.Size = new System.Drawing.Size(100, 21);
-            this.tbLoosenAngle.TabIndex = 1;
+            label25.AutoSize = true;
+            label25.Location = new System.Drawing.Point(436, 101);
+            label25.Name = "label25";
+            label25.Size = new System.Drawing.Size(56, 12);
+            label25.TabIndex = 55;
+            label25.Text = "Encoder:";
+            // 
+            // tbEnc
+            // 
+            this.tbEnc.Enabled = false;
+            this.tbEnc.Location = new System.Drawing.Point(492, 96);
+            this.tbEnc.Name = "tbEnc";
+            this.tbEnc.Size = new System.Drawing.Size(62, 21);
+            this.tbEnc.TabIndex = 56;
+            this.tbEnc.Text = "0";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(label25);
+            this.Controls.Add(this.tbEnc);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.btMcInit);
             this.Controls.Add(label24);
@@ -1198,6 +1230,7 @@ namespace ServoTester2
         private System.Windows.Forms.Button btFastenLoosen;
         private System.Windows.Forms.Button btStartStopFL;
         private System.Windows.Forms.TextBox tbLoosenAngle;
+        private System.Windows.Forms.TextBox tbEnc;
     }
 }
 

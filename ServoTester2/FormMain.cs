@@ -1382,6 +1382,8 @@ namespace ServoTester2
                   tbError.Text = Error.ToString();
                   uint MaintCnt = (uint)((ComReadBuffer[51] << 24) | (ComReadBuffer[50] << 16) | (ComReadBuffer[49] << 8) | ComReadBuffer[48]);
                   tbMaintCnt.Text = MaintCnt.ToString();
+                  ushort Enc = (ushort)((ComReadBuffer[41] << 8) | ComReadBuffer[40]);
+                  tbEnc.Text = Enc.ToString();
                   MotorState = ((ComReadBuffer[27] << 8) | ComReadBuffer[26]) != 0;
                   McFlag.b1Run = ComReadBuffer[26];
                   McFlag.b1ControlFL = ComReadBuffer[30];
