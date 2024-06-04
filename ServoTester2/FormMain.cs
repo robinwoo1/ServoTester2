@@ -863,7 +863,7 @@ namespace ServoTester2
       InitMcInfo();
       InitSyncStruct();
       InitInfo_DrvModel_para(8);//1);
-      InitDriverInfo(1);
+      InitDriverInfo(8);
       InitParameter(8);
       // set event
       // Port.DataReceived += PortOnDataReceived;
