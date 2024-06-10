@@ -859,6 +859,7 @@ namespace ServoTester2
       // select baudrate
       tbBaudrate.SelectedIndex = 0;
 
+      InitAutoSetting();
       InitMcFlag();
       InitMcInfo();
       InitSyncStruct();
@@ -869,7 +870,36 @@ namespace ServoTester2
       // Port.DataReceived += PortOnDataReceived;
       Port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
     }
-    
+    private void btSoftHardAutocustom_Click(object sender, EventArgs e)
+    {
+      if (btSoftHardAutocustom.Text == "Soft")
+      {
+        MakeAndSendData(2, 8, 0);
+        // btSoftHardAutocustom.Text = "Hard";
+        // rbSoftAutocustom.Checked = true;
+      }
+      else//Hard
+      {
+        MakeAndSendData(2, 8, 1);
+        // btSoftHardAutocustom.Text = "Soft";
+        // rbHardAutocustom.Checked = true;
+      }
+    }
+    private void btStartStopAutocustom_Click(object sender, EventArgs e)
+    {
+      if (btStartStopAutocustom.Text == "Start")
+      {
+        MakeAndSendData(2, 9, 1);
+        // btStartStopAutocustom.Text = "Stop";
+        // rbStartAutocustom.Checked = true;
+      }
+      else//Stop
+      {
+        MakeAndSendData(2, 9, 0);
+        // btStartStopAutocustom.Text = "Start";
+        // rbStopAutocustom.Checked = true;
+      }
+    }
     private void btRefresh_Click(object sender, EventArgs e)
     {
       // refresh
@@ -1156,6 +1186,29 @@ namespace ServoTester2
       timer_working = 1;
       time_tick++;
       tbAckMessage.Text = time_tick.ToString();
+
+      switch (AutoSetting.FlagSetting)
+      {
+        case true when !rbSoftAutocustom.Checked:
+          btSoftHardAutocustom.Text = "Hard";
+          rbSoftAutocustom.Checked = true;
+          break;
+        case false when !rbHardAutocustom.Checked:
+          btSoftHardAutocustom.Text = "Soft";
+          rbHardAutocustom.Checked = true;
+          break;
+      }
+      switch (AutoSetting.FlagStart)
+      {
+        case true when !rbStartAutocustom.Checked:
+          btStartStopAutocustom.Text = "Stop";
+          rbStartAutocustom.Checked = true;
+          break;
+        case false when !rbStopAutocustom.Checked:
+          btStartStopAutocustom.Text = "Start";
+          rbStopAutocustom.Checked = true;
+          break;
+      }
       // check motor state
       switch (MotorState)
       {
@@ -1388,6 +1441,16 @@ namespace ServoTester2
                   McFlag.b1Run = ComReadBuffer[26];
                   McFlag.b1ControlFL = ComReadBuffer[30];
 
+                  if (ComReadBuffer[42] != 0)
+                    AutoSetting.FlagSetting = true;
+                  else
+                    AutoSetting.FlagSetting = false;
+
+                  if (ComReadBuffer[43] != 0)
+                    AutoSetting.FlagStart = true;
+                  else
+                    AutoSetting.FlagStart = false;
+                  
                   byte b1Run = (byte)(ComReadBuffer[44] & 0x01);
                   if (FlagRun[0] != b1Run)
                   {
@@ -1762,6 +1825,17 @@ namespace ServoTester2
       Mc_Para.val.u16MC_CROWFOOT_EFFICIENCY = 100;          //15
       Mc_Para.val.f32MC_CROWFOOT_REVERSE_TORQUE = 50;      //16
       Mc_Para.val.u16MC_CROWFOOT_REVERSE_SPEED = 0;       //17
+    }
+    public struct _auto_setting
+    {
+      public bool FlagSetting;
+      public bool FlagStart;
+    }
+    _auto_setting AutoSetting;
+    void InitAutoSetting()
+    {
+      AutoSetting.FlagSetting = false;
+      AutoSetting.FlagStart = false;
     }
     public struct _McFlag
     {
