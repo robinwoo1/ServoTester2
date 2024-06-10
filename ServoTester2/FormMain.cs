@@ -870,6 +870,18 @@ namespace ServoTester2
       // Port.DataReceived += PortOnDataReceived;
       Port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
     }
+    private void btSaveOrigin_Click(object sender, EventArgs e)
+    {
+      MakeAndSendData(2, 3, 0);
+    }
+    private void btStartOrigin_Click(object sender, EventArgs e)
+    {
+      MakeAndSendData(2, 4, 0);
+    }
+    private void btResetMC_Click(object sender, EventArgs e)
+    {
+      MakeAndSendData(2, 5, 0);
+    }
     private void btSoftHardAutocustom_Click(object sender, EventArgs e)
     {
       if (btSoftHardAutocustom.Text == "Soft")
@@ -1187,6 +1199,11 @@ namespace ServoTester2
       time_tick++;
       tbAckMessage.Text = time_tick.ToString();
 
+      tbTargetSpeed.Text = AutoSetting.CurrentSpeed.ToString();
+      tbSeatingPoint.Text = AutoSetting.CurrentSeatingPoint.ToString();
+      tbFreeSpeed.Text = AutoSetting.CurrentFSpeed.ToString();
+      tbFreeAngle.Text = AutoSetting.CurrentFAngle.ToString();
+      
       switch (AutoSetting.FlagSetting)
       {
         case true when !rbSoftAutocustom.Checked:
@@ -1406,10 +1423,14 @@ namespace ServoTester2
                   }
                   break;
                 case 2:
-                  if (StartAddress == 1 || StartAddress == 2 || StartAddress == 3 || StartAddress == 4 || StartAddress == 5 ||
+                  if (StartAddress == 1 || StartAddress == 2 || StartAddress == 3 || StartAddress == 4 ||
                       StartAddress == 6 || StartAddress == 7 || StartAddress == 8 || StartAddress == 9 || StartAddress == 10)
                   {
                     ResetAckState();
+                  }
+                  else if (StartAddress == 5)
+                  {
+                    btMcInit.Text = @"Init MC - No";
                   }
                   else if (StartAddress == 11)
                   {
@@ -1417,11 +1438,11 @@ namespace ServoTester2
                     ushort Mcinitialized = ComReadBuffer[11];
                     if (Mcinitialized != 0)
                     {
-                      btMcInit.Text = @"McInit Ok";
+                      btMcInit.Text = @"Init MC - Yes";
                     }
                     else
                     {
-                      btMcInit.Text = @"McInit Fail";
+                      btMcInit.Text = @"Init MC - Fail";
                     }
                   }
                   break;
@@ -1487,6 +1508,10 @@ namespace ServoTester2
                   {
                     AckSend(Command, 0, StartAddress, 0);       // return Ack OK
                   }
+                  AutoSetting.CurrentSpeed = (ushort)((ComReadBuffer[119] << 8) | ComReadBuffer[118]);
+                  AutoSetting.CurrentSeatingPoint = (ushort)((ComReadBuffer[121] << 8) | ComReadBuffer[120]);
+                  AutoSetting.CurrentFSpeed = (ushort)((ComReadBuffer[123] << 8) | ComReadBuffer[122]);
+                  AutoSetting.CurrentFAngle = (ushort)((ComReadBuffer[125] << 8) | ComReadBuffer[124]);
                   break;
                 case 6:
                   break;
@@ -1830,12 +1855,20 @@ namespace ServoTester2
     {
       public bool FlagSetting;
       public bool FlagStart;
+      public ushort CurrentSpeed;
+      public ushort CurrentSeatingPoint;
+      public ushort CurrentFSpeed;
+      public ushort CurrentFAngle;
     }
     _auto_setting AutoSetting;
     void InitAutoSetting()
     {
       AutoSetting.FlagSetting = false;
       AutoSetting.FlagStart = false;
+      AutoSetting.CurrentSpeed = 0;
+      AutoSetting.CurrentSeatingPoint = 0;
+      AutoSetting.CurrentFSpeed = 0;
+      AutoSetting.CurrentFAngle = 0;
     }
     public struct _McFlag
     {

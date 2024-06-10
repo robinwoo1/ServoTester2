@@ -117,18 +117,22 @@ namespace ServoTester2
             this.btStartStopFL = new System.Windows.Forms.Button();
             this.tbEnc = new System.Windows.Forms.TextBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.tbTargetSpeed = new System.Windows.Forms.TextBox();
-            this.tbSeatingPoint = new System.Windows.Forms.TextBox();
-            this.tbFreeSpeed = new System.Windows.Forms.TextBox();
-            this.tbFreeAngle = new System.Windows.Forms.TextBox();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.rbHardAutocustom = new System.Windows.Forms.RadioButton();
-            this.btSoftHardAutocustom = new System.Windows.Forms.Button();
-            this.rbSoftAutocustom = new System.Windows.Forms.RadioButton();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.rbStopAutocustom = new System.Windows.Forms.RadioButton();
             this.rbStartAutocustom = new System.Windows.Forms.RadioButton();
             this.btStartStopAutocustom = new System.Windows.Forms.Button();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.rbHardAutocustom = new System.Windows.Forms.RadioButton();
+            this.btSoftHardAutocustom = new System.Windows.Forms.Button();
+            this.rbSoftAutocustom = new System.Windows.Forms.RadioButton();
+            this.tbFreeAngle = new System.Windows.Forms.TextBox();
+            this.tbFreeSpeed = new System.Windows.Forms.TextBox();
+            this.tbSeatingPoint = new System.Windows.Forms.TextBox();
+            this.tbTargetSpeed = new System.Windows.Forms.TextBox();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.btStartOrigin = new System.Windows.Forms.Button();
+            this.btSaveOrigin = new System.Windows.Forms.Button();
+            this.btResetMc = new System.Windows.Forms.Button();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -186,8 +190,9 @@ namespace ServoTester2
             this.groupBox6.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox9.SuspendLayout();
-            this.groupBox10.SuspendLayout();
             this.groupBox11.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.groupBox12.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -998,6 +1003,42 @@ namespace ServoTester2
             label25.TabIndex = 55;
             label25.Text = "Encoder:";
             // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new System.Drawing.Point(6, 95);
+            label26.Name = "label26";
+            label26.Size = new System.Drawing.Size(80, 12);
+            label26.TabIndex = 41;
+            label26.Text = "TartgetSpeed";
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new System.Drawing.Point(6, 118);
+            label27.Name = "label27";
+            label27.Size = new System.Drawing.Size(75, 12);
+            label27.TabIndex = 49;
+            label27.Text = "SeatingPoint";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Location = new System.Drawing.Point(6, 141);
+            label28.Name = "label28";
+            label28.Size = new System.Drawing.Size(66, 12);
+            label28.TabIndex = 51;
+            label28.Text = "FreeSpeed";
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new System.Drawing.Point(6, 164);
+            label29.Name = "label29";
+            label29.Size = new System.Drawing.Size(62, 12);
+            label29.TabIndex = 53;
+            label29.Text = "FreeAngle";
+            // 
             // workTimer
             // 
             this.workTimer.Tick += new System.EventHandler(this.workTimer_Tick);
@@ -1038,7 +1079,7 @@ namespace ServoTester2
             this.groupBox6.Controls.Add(this.tbAckMessage);
             this.groupBox6.Location = new System.Drawing.Point(450, 12);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(130, 44);
+            this.groupBox6.Size = new System.Drawing.Size(130, 41);
             this.groupBox6.TabIndex = 51;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Ack message";
@@ -1083,11 +1124,11 @@ namespace ServoTester2
             // 
             // btMcInit
             // 
-            this.btMcInit.Location = new System.Drawing.Point(454, 72);
+            this.btMcInit.Location = new System.Drawing.Point(454, 76);
             this.btMcInit.Name = "btMcInit";
             this.btMcInit.Size = new System.Drawing.Size(94, 20);
             this.btMcInit.TabIndex = 54;
-            this.btMcInit.Text = "McInit(No)";
+            this.btMcInit.Text = "Init MC - No";
             this.btMcInit.UseVisualStyleBackColor = true;
             this.btMcInit.Click += new System.EventHandler(this.btMcInit_Click);
             // 
@@ -1135,7 +1176,7 @@ namespace ServoTester2
             // tbEnc
             // 
             this.tbEnc.Enabled = false;
-            this.tbEnc.Location = new System.Drawing.Point(492, 98);
+            this.tbEnc.Location = new System.Drawing.Point(492, 100);
             this.tbEnc.Name = "tbEnc";
             this.tbEnc.Size = new System.Drawing.Size(62, 21);
             this.tbEnc.TabIndex = 56;
@@ -1159,124 +1200,6 @@ namespace ServoTester2
             this.groupBox9.TabIndex = 51;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Auto-customize";
-            // 
-            // tbTargetSpeed
-            // 
-            this.tbTargetSpeed.Enabled = false;
-            this.tbTargetSpeed.Location = new System.Drawing.Point(90, 91);
-            this.tbTargetSpeed.Name = "tbTargetSpeed";
-            this.tbTargetSpeed.Size = new System.Drawing.Size(66, 21);
-            this.tbTargetSpeed.TabIndex = 1;
-            this.tbTargetSpeed.Text = "0";
-            // 
-            // label26
-            // 
-            label26.AutoSize = true;
-            label26.Location = new System.Drawing.Point(6, 95);
-            label26.Name = "label26";
-            label26.Size = new System.Drawing.Size(80, 12);
-            label26.TabIndex = 41;
-            label26.Text = "TartgetSpeed";
-            // 
-            // label27
-            // 
-            label27.AutoSize = true;
-            label27.Location = new System.Drawing.Point(6, 118);
-            label27.Name = "label27";
-            label27.Size = new System.Drawing.Size(75, 12);
-            label27.TabIndex = 49;
-            label27.Text = "SeatingPoint";
-            // 
-            // tbSeatingPoint
-            // 
-            this.tbSeatingPoint.Enabled = false;
-            this.tbSeatingPoint.Location = new System.Drawing.Point(90, 114);
-            this.tbSeatingPoint.Name = "tbSeatingPoint";
-            this.tbSeatingPoint.Size = new System.Drawing.Size(66, 21);
-            this.tbSeatingPoint.TabIndex = 48;
-            this.tbSeatingPoint.Text = "0";
-            // 
-            // label28
-            // 
-            label28.AutoSize = true;
-            label28.Location = new System.Drawing.Point(6, 141);
-            label28.Name = "label28";
-            label28.Size = new System.Drawing.Size(66, 12);
-            label28.TabIndex = 51;
-            label28.Text = "FreeSpeed";
-            // 
-            // tbFreeSpeed
-            // 
-            this.tbFreeSpeed.Enabled = false;
-            this.tbFreeSpeed.Location = new System.Drawing.Point(90, 137);
-            this.tbFreeSpeed.Name = "tbFreeSpeed";
-            this.tbFreeSpeed.Size = new System.Drawing.Size(66, 21);
-            this.tbFreeSpeed.TabIndex = 50;
-            this.tbFreeSpeed.Text = "0";
-            // 
-            // label29
-            // 
-            label29.AutoSize = true;
-            label29.Location = new System.Drawing.Point(6, 164);
-            label29.Name = "label29";
-            label29.Size = new System.Drawing.Size(62, 12);
-            label29.TabIndex = 53;
-            label29.Text = "FreeAngle";
-            // 
-            // tbFreeAngle
-            // 
-            this.tbFreeAngle.Enabled = false;
-            this.tbFreeAngle.Location = new System.Drawing.Point(90, 160);
-            this.tbFreeAngle.Name = "tbFreeAngle";
-            this.tbFreeAngle.Size = new System.Drawing.Size(66, 21);
-            this.tbFreeAngle.TabIndex = 52;
-            this.tbFreeAngle.Text = "0";
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.rbHardAutocustom);
-            this.groupBox10.Controls.Add(this.btSoftHardAutocustom);
-            this.groupBox10.Controls.Add(this.rbSoftAutocustom);
-            this.groupBox10.Location = new System.Drawing.Point(7, 13);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(149, 36);
-            this.groupBox10.TabIndex = 56;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Soft/Hard";
-            // 
-            // rbHardAutocustom
-            // 
-            this.rbHardAutocustom.AutoSize = true;
-            this.rbHardAutocustom.Cursor = System.Windows.Forms.Cursors.No;
-            this.rbHardAutocustom.Location = new System.Drawing.Point(98, 16);
-            this.rbHardAutocustom.Name = "rbHardAutocustom";
-            this.rbHardAutocustom.Size = new System.Drawing.Size(49, 16);
-            this.rbHardAutocustom.TabIndex = 47;
-            this.rbHardAutocustom.Text = "Hard";
-            this.rbHardAutocustom.UseVisualStyleBackColor = true;
-            // 
-            // btSoftHardAutocustom
-            // 
-            this.btSoftHardAutocustom.Location = new System.Drawing.Point(6, 14);
-            this.btSoftHardAutocustom.Name = "btSoftHardAutocustom";
-            this.btSoftHardAutocustom.Size = new System.Drawing.Size(39, 19);
-            this.btSoftHardAutocustom.TabIndex = 8;
-            this.btSoftHardAutocustom.Text = "Hard";
-            this.btSoftHardAutocustom.UseVisualStyleBackColor = true;
-            this.btSoftHardAutocustom.Click += new System.EventHandler(this.btSoftHardAutocustom_Click);
-            // 
-            // rbSoftAutocustom
-            // 
-            this.rbSoftAutocustom.AutoSize = true;
-            this.rbSoftAutocustom.Checked = true;
-            this.rbSoftAutocustom.Cursor = System.Windows.Forms.Cursors.No;
-            this.rbSoftAutocustom.Location = new System.Drawing.Point(51, 16);
-            this.rbSoftAutocustom.Name = "rbSoftAutocustom";
-            this.rbSoftAutocustom.Size = new System.Drawing.Size(44, 16);
-            this.rbSoftAutocustom.TabIndex = 46;
-            this.rbSoftAutocustom.TabStop = true;
-            this.rbSoftAutocustom.Text = "Soft";
-            this.rbSoftAutocustom.UseVisualStyleBackColor = true;
             // 
             // groupBox11
             // 
@@ -1324,11 +1247,136 @@ namespace ServoTester2
             this.btStartStopAutocustom.UseVisualStyleBackColor = true;
             this.btStartStopAutocustom.Click += new System.EventHandler(this.btStartStopAutocustom_Click);
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.rbHardAutocustom);
+            this.groupBox10.Controls.Add(this.btSoftHardAutocustom);
+            this.groupBox10.Controls.Add(this.rbSoftAutocustom);
+            this.groupBox10.Location = new System.Drawing.Point(7, 13);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(149, 36);
+            this.groupBox10.TabIndex = 56;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Soft/Hard";
+            // 
+            // rbHardAutocustom
+            // 
+            this.rbHardAutocustom.AutoSize = true;
+            this.rbHardAutocustom.Cursor = System.Windows.Forms.Cursors.No;
+            this.rbHardAutocustom.Location = new System.Drawing.Point(98, 16);
+            this.rbHardAutocustom.Name = "rbHardAutocustom";
+            this.rbHardAutocustom.Size = new System.Drawing.Size(49, 16);
+            this.rbHardAutocustom.TabIndex = 47;
+            this.rbHardAutocustom.Text = "Hard";
+            this.rbHardAutocustom.UseVisualStyleBackColor = true;
+            // 
+            // btSoftHardAutocustom
+            // 
+            this.btSoftHardAutocustom.Location = new System.Drawing.Point(6, 14);
+            this.btSoftHardAutocustom.Name = "btSoftHardAutocustom";
+            this.btSoftHardAutocustom.Size = new System.Drawing.Size(39, 19);
+            this.btSoftHardAutocustom.TabIndex = 8;
+            this.btSoftHardAutocustom.Text = "Hard";
+            this.btSoftHardAutocustom.UseVisualStyleBackColor = true;
+            this.btSoftHardAutocustom.Click += new System.EventHandler(this.btSoftHardAutocustom_Click);
+            // 
+            // rbSoftAutocustom
+            // 
+            this.rbSoftAutocustom.AutoSize = true;
+            this.rbSoftAutocustom.Checked = true;
+            this.rbSoftAutocustom.Cursor = System.Windows.Forms.Cursors.No;
+            this.rbSoftAutocustom.Location = new System.Drawing.Point(51, 16);
+            this.rbSoftAutocustom.Name = "rbSoftAutocustom";
+            this.rbSoftAutocustom.Size = new System.Drawing.Size(44, 16);
+            this.rbSoftAutocustom.TabIndex = 46;
+            this.rbSoftAutocustom.TabStop = true;
+            this.rbSoftAutocustom.Text = "Soft";
+            this.rbSoftAutocustom.UseVisualStyleBackColor = true;
+            // 
+            // tbFreeAngle
+            // 
+            this.tbFreeAngle.Enabled = false;
+            this.tbFreeAngle.Location = new System.Drawing.Point(90, 160);
+            this.tbFreeAngle.Name = "tbFreeAngle";
+            this.tbFreeAngle.Size = new System.Drawing.Size(66, 21);
+            this.tbFreeAngle.TabIndex = 52;
+            this.tbFreeAngle.Text = "0";
+            // 
+            // tbFreeSpeed
+            // 
+            this.tbFreeSpeed.Enabled = false;
+            this.tbFreeSpeed.Location = new System.Drawing.Point(90, 137);
+            this.tbFreeSpeed.Name = "tbFreeSpeed";
+            this.tbFreeSpeed.Size = new System.Drawing.Size(66, 21);
+            this.tbFreeSpeed.TabIndex = 50;
+            this.tbFreeSpeed.Text = "0";
+            // 
+            // tbSeatingPoint
+            // 
+            this.tbSeatingPoint.Enabled = false;
+            this.tbSeatingPoint.Location = new System.Drawing.Point(90, 114);
+            this.tbSeatingPoint.Name = "tbSeatingPoint";
+            this.tbSeatingPoint.Size = new System.Drawing.Size(66, 21);
+            this.tbSeatingPoint.TabIndex = 48;
+            this.tbSeatingPoint.Text = "0";
+            // 
+            // tbTargetSpeed
+            // 
+            this.tbTargetSpeed.Enabled = false;
+            this.tbTargetSpeed.Location = new System.Drawing.Point(90, 91);
+            this.tbTargetSpeed.Name = "tbTargetSpeed";
+            this.tbTargetSpeed.Size = new System.Drawing.Size(66, 21);
+            this.tbTargetSpeed.TabIndex = 1;
+            this.tbTargetSpeed.Text = "0";
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.btStartOrigin);
+            this.groupBox12.Controls.Add(this.btSaveOrigin);
+            this.groupBox12.Location = new System.Drawing.Point(305, 405);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(134, 59);
+            this.groupBox12.TabIndex = 52;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Origin";
+            // 
+            // btStartOrigin
+            // 
+            this.btStartOrigin.Location = new System.Drawing.Point(5, 34);
+            this.btStartOrigin.Name = "btStartOrigin";
+            this.btStartOrigin.Size = new System.Drawing.Size(74, 19);
+            this.btStartOrigin.TabIndex = 7;
+            this.btStartOrigin.Text = "StartOrigin";
+            this.btStartOrigin.UseVisualStyleBackColor = true;
+            this.btStartOrigin.Click += new System.EventHandler(this.btStartOrigin_Click);
+            // 
+            // btSaveOrigin
+            // 
+            this.btSaveOrigin.Location = new System.Drawing.Point(5, 16);
+            this.btSaveOrigin.Name = "btSaveOrigin";
+            this.btSaveOrigin.Size = new System.Drawing.Size(74, 18);
+            this.btSaveOrigin.TabIndex = 6;
+            this.btSaveOrigin.Text = "SaveOrigin";
+            this.btSaveOrigin.UseVisualStyleBackColor = true;
+            this.btSaveOrigin.Click += new System.EventHandler(this.btSaveOrigin_Click);
+            // 
+            // btResetMc
+            // 
+            this.btResetMc.Location = new System.Drawing.Point(454, 54);
+            this.btResetMc.Name = "btResetMc";
+            this.btResetMc.Size = new System.Drawing.Size(94, 20);
+            this.btResetMc.TabIndex = 57;
+            this.btResetMc.Text = "Reset MC";
+            this.btResetMc.UseVisualStyleBackColor = true;
+            this.btResetMc.Click += new System.EventHandler(this.btResetMC_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 660);
+            this.Controls.Add(this.btResetMc);
+            this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox9);
             this.Controls.Add(label25);
             this.Controls.Add(this.tbEnc);
@@ -1382,10 +1430,11 @@ namespace ServoTester2
             this.groupBox8.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
+            this.groupBox12.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1458,6 +1507,10 @@ namespace ServoTester2
         private System.Windows.Forms.RadioButton rbStopAutocustom;
         private System.Windows.Forms.RadioButton rbStartAutocustom;
         private System.Windows.Forms.Button btStartStopAutocustom;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.Button btStartOrigin;
+        private System.Windows.Forms.Button btSaveOrigin;
+        private System.Windows.Forms.Button btResetMc;
     }
 }
 
