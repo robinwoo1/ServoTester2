@@ -64,6 +64,7 @@ namespace ServoTester2
             System.Windows.Forms.Label label27;
             System.Windows.Forms.Label label28;
             System.Windows.Forms.Label label29;
+            System.Windows.Forms.Label label30;
             this.btRefresh = new System.Windows.Forms.Button();
             this.btOpen = new System.Windows.Forms.Button();
             this.tbBaudrate = new System.Windows.Forms.ComboBox();
@@ -133,6 +134,7 @@ namespace ServoTester2
             this.btStartOrigin = new System.Windows.Forms.Button();
             this.btSaveOrigin = new System.Windows.Forms.Button();
             this.btResetMc = new System.Windows.Forms.Button();
+            this.tbDriverType = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -167,6 +169,7 @@ namespace ServoTester2
             label27 = new System.Windows.Forms.Label();
             label28 = new System.Windows.Forms.Label();
             label29 = new System.Windows.Forms.Label();
+            label30 = new System.Windows.Forms.Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeedFFgain)).BeginInit();
@@ -1370,11 +1373,30 @@ namespace ServoTester2
             this.btResetMc.UseVisualStyleBackColor = true;
             this.btResetMc.Click += new System.EventHandler(this.btResetMC_Click);
             // 
+            // tbDriverType
+            // 
+            this.tbDriverType.Location = new System.Drawing.Point(590, 77);
+            this.tbDriverType.Name = "tbDriverType";
+            this.tbDriverType.Size = new System.Drawing.Size(35, 21);
+            this.tbDriverType.TabIndex = 58;
+            this.tbDriverType.Text = "4";
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new System.Drawing.Point(552, 80);
+            label30.Name = "label30";
+            label30.Size = new System.Drawing.Size(38, 12);
+            label30.TabIndex = 59;
+            label30.Text = "Type:";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(590, 660);
+            this.ClientSize = new System.Drawing.Size(668, 660);
+            this.Controls.Add(label30);
+            this.Controls.Add(this.tbDriverType);
             this.Controls.Add(this.btResetMc);
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox9);
@@ -1511,6 +1533,7 @@ namespace ServoTester2
         private System.Windows.Forms.Button btStartOrigin;
         private System.Windows.Forms.Button btSaveOrigin;
         private System.Windows.Forms.Button btResetMc;
+        private System.Windows.Forms.TextBox tbDriverType;
     }
 }
 

@@ -863,9 +863,9 @@ namespace ServoTester2
       InitMcFlag();
       InitMcInfo();
       InitSyncStruct();
-      InitInfo_DrvModel_para(8);//1);
-      InitDriverInfo(8);
-      InitParameter(8);
+      InitInfo_DrvModel_para(4);//1);
+      InitDriverInfo(4);
+      InitParameter(4);
       // set event
       // Port.DataReceived += PortOnDataReceived;
       Port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
@@ -1021,6 +1021,10 @@ namespace ServoTester2
     {
       if (!Port.IsOpen)
         return;
+      ushort DriverType = (ushort)Int16.Parse(tbDriverType.Text);
+      InitInfo_DrvModel_para(DriverType);//1);
+      InitDriverInfo(DriverType);
+      InitParameter(DriverType);
       MakeAndSendData(2, 10, 0);
     }private void btTqOffset_Click(object sender, EventArgs e)
     {
@@ -1701,7 +1705,36 @@ namespace ServoTester2
       Info_DrvModel_para.u32Speed_min = 50;
       Info_DrvModel_para.u32Speed_max = 475;
       // SETING
-      Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+      switch(u16Driver_id_)
+      {
+        case 1://30
+          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          break;
+        case 2://40
+          Info_DrvModel_para.f32Gear_ratio = 4.461538f * 4.75f;
+          break;
+        case 3://50
+          Info_DrvModel_para.f32Gear_ratio = 7.428571f * 4.75f;
+          break;
+        case 4://70
+          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          break;
+        case 5://100
+          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          break;
+        case 6://150
+          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          break;
+        case 7://180
+          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          break;
+        case 8://200
+          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          break;
+        default:
+          break;
+      }
+      // Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
       Info_DrvModel_para.f32Angle_head_ratio = 1.54545498f;
     }
     private void InitDriverInfo(ushort u16Type_)
