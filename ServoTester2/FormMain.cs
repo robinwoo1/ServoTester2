@@ -572,8 +572,8 @@ namespace ServoTester2
           SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Driver_id>>8);
           SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Driver_vendor_id>>0);
           SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Driver_vendor_id>>8);
-          SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Controller_vendor_id>>0);
-          SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Controller_vendor_id>>8);
+          SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Controller_id>>0);
+          SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Controller_id>>8);
           SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Motor_id>>0);
           SendDataPacket[u16PtrCnt++] = (byte)(Info_DrvModel_para.u16Motor_id>>8);
 
@@ -1696,46 +1696,110 @@ namespace ServoTester2
     private void InitInfo_DrvModel_para(ushort u16Driver_id_)
     {
       Info_DrvModel_para.u16Driver_id = u16Driver_id_;
-      Info_DrvModel_para.u16Driver_vendor_id = 2;
-      Info_DrvModel_para.u16Controller_vendor_id = 1;      // controller model no. 1:26, 2:32
+      Info_DrvModel_para.u16Driver_vendor_id = 2;//1:hantas, 2:torero
+      Info_DrvModel_para.u16Controller_id = 1;      // controller model no. 1:26, 2:32
       Info_DrvModel_para.u16Motor_id = 2;          // used motor no.       1:26, 2:32
-      // TORQUE / SPEED
-      Info_DrvModel_para.f32Tq_min_Nm = 15;         // default Nm
-      Info_DrvModel_para.f32Tq_max_Nm = 80;         // default Nm
-      Info_DrvModel_para.u32Speed_min = 50;
-      Info_DrvModel_para.u32Speed_max = 475;
+      // // TORQUE / SPEED
+      // Info_DrvModel_para.f32Tq_min_Nm = 15;         // default Nm
+      // Info_DrvModel_para.f32Tq_max_Nm = 80;         // default Nm
+      // Info_DrvModel_para.u32Speed_min = 50;
+      // Info_DrvModel_para.u32Speed_max = 475;
       // SETING
       switch(u16Driver_id_)
       {
         case 1://30
-          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 7.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 35.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 1090;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 21.1923055f;//48.8163261f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.545455f;//1.54545498f;
           break;
         case 2://40
-          Info_DrvModel_para.f32Gear_ratio = 4.461538f * 4.75f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 8.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 40.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 1090;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 21.1923055f;//4.461538f * 4.75f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.545455f;//1.54545498f;
           break;
         case 3://50
-          Info_DrvModel_para.f32Gear_ratio = 7.428571f * 4.75f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 10.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 55.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 655;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 35.2857123f;//7.428571f * 4.75f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.545455f;//1.54545498f;
           break;
         case 4://70
-          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 15.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 80.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 475;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 48.8163269f;//48.8163261f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.545455f;//1.54545498f;
           break;
         case 5://100
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 20.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 100.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 350;
+          // Gear
           Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.8f;//1.54545498f;
           break;
         case 6://150
-          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 30.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 160.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 227;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 103.999994f;//48.8163269f;//48.8163261f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.8f;//1.54545498f;
           break;
         case 7://180
-          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 35.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 180.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 190;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 103.999994f;//48.8163261f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.8f;//1.54545498f;
           break;
         case 8://200
-          Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
+          // TORQUE
+          Info_DrvModel_para.f32Tq_min_Nm = 40.0f;         // default Nm
+          Info_DrvModel_para.f32Tq_max_Nm = 200.0f;         // default Nm
+          // SPEED
+          Info_DrvModel_para.u32Speed_min = 50;
+          Info_DrvModel_para.u32Speed_max = 185;
+          // Gear
+          Info_DrvModel_para.f32Gear_ratio = 103.999994f;//48.8163261f;
+          Info_DrvModel_para.f32Angle_head_ratio = 1.8f;//1.54545498f;
           break;
         default:
           break;
       }
       // Info_DrvModel_para.f32Gear_ratio = 48.8163261f;
-      Info_DrvModel_para.f32Angle_head_ratio = 1.54545498f;
+      // Info_DrvModel_para.f32Angle_head_ratio = 1.54545498f;
     }
     private void InitDriverInfo(ushort u16Type_)
     {
@@ -1821,20 +1885,20 @@ namespace ServoTester2
       Mc_Para.dft.u16MC_CROWFOOT_REVERSE_SPEED=50;    Mc_Para.min.u16MC_CROWFOOT_REVERSE_SPEED=0;     Mc_Para.max.u16MC_CROWFOOT_REVERSE_SPEED=100;     //SET[17] : 
 
       Mc_Para.val.u16MC_ZERO_DUMMY = 0;     //0
-      Mc_Para.val.u16MC_TCAM_ACTM = 1;      //1
-      Mc_Para.val.f32MC_FASTEN_TORQUE = 10; //2
+      Mc_Para.val.u16MC_TCAM_ACTM = 0;      //1
+      Mc_Para.val.f32MC_FASTEN_TORQUE = 20; //2
       Mc_Para.val.f32MC_TORQUE_MIN_MAX = 0; //3
-      Mc_Para.val.u16MC_TARGET_ANGLE = 720;   //4
+      Mc_Para.val.u16MC_TARGET_ANGLE = 0;   //4
       Mc_Para.val.u16MC_FASTEN_MIN_ANGLE = 0; //5
       Mc_Para.val.u16MC_FASTEN_MAX_ANGLE = 0; //6
       Mc_Para.val.f32MC_SNUG_TORQUE = 0;      //7
-      Mc_Para.val.u16MC_FASTEN_SPEED = 50;     //8
+      Mc_Para.val.u16MC_FASTEN_SPEED = 100;     //8
       Mc_Para.val.u16MC_FREE_FASTEN_ANGLE = 0;  //9
       Mc_Para.val.u16MC_FREE_FASTEN_SPEED = 0;  //10
-      Mc_Para.val.u16MC_SOFT_START = 300;         //11
-      Mc_Para.val.u16MC_FASTEN_SEATTING_POINT_RATE = 70; //12
+      Mc_Para.val.u16MC_SOFT_START = 100;         //11
+      Mc_Para.val.u16MC_FASTEN_SEATTING_POINT_RATE = 50; //12
       Mc_Para.val.u16MC_FASTEN_TQ_RISING_TIME = 50;      //13
-      Mc_Para.val.u16MC_RAMP_UP_SPEED = 100;              //14
+      Mc_Para.val.u16MC_RAMP_UP_SPEED = 150;              //14
       Mc_Para.val.u16MC_TORQUE_COMPENSATION = 100;        //15
       Mc_Para.val.u16MC_TORQUE_OFFSET = 10;              //16
       Mc_Para.val.u16MC_MAX_PULSE_COUNT = 100;            //17
@@ -1867,10 +1931,10 @@ namespace ServoTester2
 
       Mc_Para.val.u16MC_DRIVER_MODEL = u16MC_DRIVER_MODEL_;//4;//1;                 //0
       Mc_Para.val.u16MC_UNIT = 2;                         //1
-      Mc_Para.val.u16MC_ACC_DEC_TIME = 500;                 //2
+      Mc_Para.val.u16MC_ACC_DEC_TIME = 200;                 //2
       Mc_Para.val.u16MC_FASTEN_TORQUE_MAINTAIN_TIME = 0;  //3
       Mc_Para.val.u16MC_USE_MAXTQ_FOR_LOOSENING = 0;      //4
-      Mc_Para.val.u16MC_LOOSENING_SPEED = 700;              //5
+      Mc_Para.val.u16MC_LOOSENING_SPEED = 100;              //5
       Mc_Para.val.f32MC_TOTAL_FASTENING_TIME = 10;         //6
       Mc_Para.val.f32MC_TOTAL_LOOSENING_TIME = 10;         //7
       Mc_Para.val.f32MC_INIT_LOOSENING_TIME_LIMIT = 0.2f;    //8
@@ -2097,7 +2161,7 @@ namespace ServoTester2
       // MODEL
       public ushort    u16Driver_id;
       public ushort    u16Driver_vendor_id;
-      public ushort    u16Controller_vendor_id;      // controller model no. 1:26, 2:32
+      public ushort    u16Controller_id;      // controller model no. 1:26, 2:32
       public ushort    u16Motor_id;          // used motor no.       1:26, 2:32
       // TORQUE / SPEED
       public float     f32Tq_min_Nm;         // default Nm
@@ -2113,7 +2177,7 @@ namespace ServoTester2
       {
         this.u16Driver_id = u16Driver_id_;
         this.u16Driver_vendor_id = 2;
-        this.u16Controller_vendor_id = 1;      // controller model no. 1:26, 2:32
+        this.u16Controller_id = 1;      // controller model no. 1:26, 2:32
         this.u16Motor_id = 2;          // used motor no.       1:26, 2:32
         // TORQUE / SPEED
         this.f32Tq_min_Nm = 15;         // default Nm

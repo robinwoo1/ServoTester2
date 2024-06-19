@@ -135,6 +135,13 @@ namespace ServoTester2
             this.btSaveOrigin = new System.Windows.Forms.Button();
             this.btResetMc = new System.Windows.Forms.Button();
             this.tbDriverType = new System.Windows.Forms.TextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             groupBox1 = new System.Windows.Forms.GroupBox();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -196,6 +203,12 @@ namespace ServoTester2
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox12.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -320,7 +333,7 @@ namespace ServoTester2
             groupBox2.Controls.Add(label3);
             groupBox2.Controls.Add(this.tbOn);
             groupBox2.Controls.Add(this.tbOff);
-            groupBox2.Location = new System.Drawing.Point(12, 118);
+            groupBox2.Location = new System.Drawing.Point(23, 21);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new System.Drawing.Size(560, 281);
             groupBox2.TabIndex = 1;
@@ -794,7 +807,7 @@ namespace ServoTester2
             groupBox3.Controls.Add(this.tbCalibUserStop);
             groupBox3.Controls.Add(this.tbCalibFail);
             groupBox3.Controls.Add(this.tbCalibSuccess);
-            groupBox3.Location = new System.Drawing.Point(12, 603);
+            groupBox3.Location = new System.Drawing.Point(5, 121);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new System.Drawing.Size(256, 45);
             groupBox3.TabIndex = 2;
@@ -843,7 +856,7 @@ namespace ServoTester2
             groupBox4.Controls.Add(this.tbForward);
             groupBox4.Controls.Add(this.tbHold);
             groupBox4.Controls.Add(this.tbNone);
-            groupBox4.Location = new System.Drawing.Point(12, 550);
+            groupBox4.Location = new System.Drawing.Point(3, 68);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new System.Drawing.Size(347, 47);
             groupBox4.TabIndex = 49;
@@ -915,7 +928,7 @@ namespace ServoTester2
             groupBox7.Controls.Add(this.tbTqSensorValue);
             groupBox7.Controls.Add(this.btTqOffsetSave);
             groupBox7.Controls.Add(this.btTqOffsetCheck);
-            groupBox7.Location = new System.Drawing.Point(249, 12);
+            groupBox7.Location = new System.Drawing.Point(420, 24);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new System.Drawing.Size(195, 83);
             groupBox7.TabIndex = 6;
@@ -982,7 +995,7 @@ namespace ServoTester2
             // label22
             // 
             label22.AutoSize = true;
-            label22.Location = new System.Drawing.Point(12, 101);
+            label22.Location = new System.Drawing.Point(246, 55);
             label22.Name = "label22";
             label22.Size = new System.Drawing.Size(75, 12);
             label22.TabIndex = 8;
@@ -991,7 +1004,7 @@ namespace ServoTester2
             // label24
             // 
             label24.AutoSize = true;
-            label24.Location = new System.Drawing.Point(259, 101);
+            label24.Location = new System.Drawing.Point(250, 31);
             label24.Name = "label24";
             label24.Size = new System.Drawing.Size(63, 12);
             label24.TabIndex = 52;
@@ -1000,7 +1013,7 @@ namespace ServoTester2
             // label25
             // 
             label25.AutoSize = true;
-            label25.Location = new System.Drawing.Point(436, 103);
+            label25.Location = new System.Drawing.Point(482, 56);
             label25.Name = "label25";
             label25.Size = new System.Drawing.Size(56, 12);
             label25.TabIndex = 55;
@@ -1042,6 +1055,15 @@ namespace ServoTester2
             label29.TabIndex = 53;
             label29.Text = "FreeAngle";
             // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new System.Drawing.Point(552, 80);
+            label30.Name = "label30";
+            label30.Size = new System.Drawing.Size(38, 12);
+            label30.TabIndex = 59;
+            label30.Text = "Type:";
+            // 
             // workTimer
             // 
             this.workTimer.Tick += new System.EventHandler(this.workTimer_Tick);
@@ -1050,7 +1072,7 @@ namespace ServoTester2
             // 
             this.groupBox5.Controls.Add(this.btCalibStart);
             this.groupBox5.Controls.Add(this.btCalibStop);
-            this.groupBox5.Location = new System.Drawing.Point(12, 499);
+            this.groupBox5.Location = new System.Drawing.Point(5, 14);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(239, 44);
             this.groupBox5.TabIndex = 50;
@@ -1080,7 +1102,7 @@ namespace ServoTester2
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.tbAckMessage);
-            this.groupBox6.Location = new System.Drawing.Point(450, 12);
+            this.groupBox6.Location = new System.Drawing.Point(477, 12);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(130, 41);
             this.groupBox6.TabIndex = 51;
@@ -1098,7 +1120,7 @@ namespace ServoTester2
             // 
             // btAlarmReset
             // 
-            this.btAlarmReset.Location = new System.Drawing.Point(143, 96);
+            this.btAlarmReset.Location = new System.Drawing.Point(377, 50);
             this.btAlarmReset.Name = "btAlarmReset";
             this.btAlarmReset.Size = new System.Drawing.Size(87, 21);
             this.btAlarmReset.TabIndex = 41;
@@ -1110,7 +1132,7 @@ namespace ServoTester2
             // 
             this.tbError.Enabled = false;
             this.tbError.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.tbError.Location = new System.Drawing.Point(88, 96);
+            this.tbError.Location = new System.Drawing.Point(322, 50);
             this.tbError.Name = "tbError";
             this.tbError.Size = new System.Drawing.Size(44, 21);
             this.tbError.TabIndex = 8;
@@ -1119,7 +1141,7 @@ namespace ServoTester2
             // tbMaintCnt
             // 
             this.tbMaintCnt.Enabled = false;
-            this.tbMaintCnt.Location = new System.Drawing.Point(323, 96);
+            this.tbMaintCnt.Location = new System.Drawing.Point(314, 26);
             this.tbMaintCnt.Name = "tbMaintCnt";
             this.tbMaintCnt.Size = new System.Drawing.Size(100, 21);
             this.tbMaintCnt.TabIndex = 53;
@@ -1140,7 +1162,7 @@ namespace ServoTester2
             this.groupBox8.Controls.Add(this.tbLoosenAngle);
             this.groupBox8.Controls.Add(this.btFastenLoosen);
             this.groupBox8.Controls.Add(this.btStartStopFL);
-            this.groupBox8.Location = new System.Drawing.Point(450, 405);
+            this.groupBox8.Location = new System.Drawing.Point(23, 6);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(134, 59);
             this.groupBox8.TabIndex = 51;
@@ -1179,7 +1201,7 @@ namespace ServoTester2
             // tbEnc
             // 
             this.tbEnc.Enabled = false;
-            this.tbEnc.Location = new System.Drawing.Point(492, 100);
+            this.tbEnc.Location = new System.Drawing.Point(538, 53);
             this.tbEnc.Name = "tbEnc";
             this.tbEnc.Size = new System.Drawing.Size(62, 21);
             this.tbEnc.TabIndex = 56;
@@ -1197,7 +1219,7 @@ namespace ServoTester2
             this.groupBox9.Controls.Add(this.tbSeatingPoint);
             this.groupBox9.Controls.Add(label26);
             this.groupBox9.Controls.Add(this.tbTargetSpeed);
-            this.groupBox9.Location = new System.Drawing.Point(422, 470);
+            this.groupBox9.Location = new System.Drawing.Point(101, 20);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(161, 188);
             this.groupBox9.TabIndex = 51;
@@ -1336,7 +1358,7 @@ namespace ServoTester2
             // 
             this.groupBox12.Controls.Add(this.btStartOrigin);
             this.groupBox12.Controls.Add(this.btSaveOrigin);
-            this.groupBox12.Location = new System.Drawing.Point(305, 405);
+            this.groupBox12.Location = new System.Drawing.Point(17, 6);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(134, 59);
             this.groupBox12.TabIndex = 52;
@@ -1365,7 +1387,7 @@ namespace ServoTester2
             // 
             // btResetMc
             // 
-            this.btResetMc.Location = new System.Drawing.Point(454, 54);
+            this.btResetMc.Location = new System.Drawing.Point(252, 75);
             this.btResetMc.Name = "btResetMc";
             this.btResetMc.Size = new System.Drawing.Size(94, 20);
             this.btResetMc.TabIndex = 57;
@@ -1381,42 +1403,107 @@ namespace ServoTester2
             this.tbDriverType.TabIndex = 58;
             this.tbDriverType.Text = "4";
             // 
-            // label30
+            // menuStrip1
             // 
-            label30.AutoSize = true;
-            label30.Location = new System.Drawing.Point(552, 80);
-            label30.Name = "label30";
-            label30.Size = new System.Drawing.Size(38, 12);
-            label30.TabIndex = 59;
-            label30.Text = "Type:";
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(672, 24);
+            this.menuStrip1.TabIndex = 60;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Location = new System.Drawing.Point(12, 104);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(653, 442);
+            this.tabControl1.TabIndex = 61;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBox5);
+            this.tabPage1.Controls.Add(groupBox4);
+            this.tabPage1.Controls.Add(groupBox3);
+            this.tabPage1.Controls.Add(groupBox7);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(645, 416);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Calibration";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBox12);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(645, 416);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Origin";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.groupBox9);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(645, 416);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Auto-Custom";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.groupBox8);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(645, 416);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Fasten/Loosen";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(groupBox2);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(645, 416);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Servo";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(668, 660);
+            this.ClientSize = new System.Drawing.Size(672, 549);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(label30);
             this.Controls.Add(this.tbDriverType);
             this.Controls.Add(this.btResetMc);
-            this.Controls.Add(this.groupBox12);
-            this.Controls.Add(this.groupBox9);
             this.Controls.Add(label25);
             this.Controls.Add(this.tbEnc);
-            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.btMcInit);
             this.Controls.Add(label24);
             this.Controls.Add(this.tbMaintCnt);
             this.Controls.Add(this.btAlarmReset);
             this.Controls.Add(label22);
-            this.Controls.Add(groupBox7);
             this.Controls.Add(this.tbError);
             this.Controls.Add(this.groupBox6);
-            this.Controls.Add(this.groupBox5);
-            this.Controls.Add(groupBox4);
-            this.Controls.Add(groupBox3);
-            this.Controls.Add(groupBox2);
             this.Controls.Add(groupBox1);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "Servo motor controller v1.0";
@@ -1457,6 +1544,12 @@ namespace ServoTester2
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox12.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1534,6 +1627,13 @@ namespace ServoTester2
         private System.Windows.Forms.Button btSaveOrigin;
         private System.Windows.Forms.Button btResetMc;
         private System.Windows.Forms.TextBox tbDriverType;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
     }
 }
 
